@@ -172,6 +172,7 @@ class GraphRouter:
         if path == "/v1.0/sites/site-1/drive":
             return httpx.Response(200, json=json.loads((g / "site_drive.json").read_text()))
         if path.endswith("/root/delta"):
+            assert "deltashowsharingchanges" in request.headers["Prefer"]
             name = {None: "delta_page1", "page2": "delta_page2", "cursor-1": "delta_incremental"}[token]
             return httpx.Response(200, json=json.loads((g / f"{name}.json").read_text()))
         if path.endswith("/permissions"):

@@ -3,8 +3,9 @@
 API shapes used (Graph v1.0):
 
 * ``GET /sites/{site-id}/drive`` to find the document library's drive;
-* ``GET /drives/{drive-id}/root/delta`` (then ``@odata.nextLink`` pages and finally an ``@odata.deltaLink``, the
-  cursor for the next incremental sync). Deleted items come back with a ``deleted`` facet;
+* ``GET /drives/{drive-id}/root/delta`` with ``Prefer: deltashowsharingchanges`` (then ``@odata.nextLink`` pages
+  and finally an ``@odata.deltaLink``, the cursor for the next incremental sync). Deleted items come back with a
+  ``deleted`` facet;
 * ``GET /drives/{drive-id}/items/{item-id}/content`` (a 302 to a pre-authenticated download URL);
 * ``GET /drives/{drive-id}/items/{item-id}/permissions``: ``grantedToV2`` / ``grantedToIdentitiesV2`` with
   ``user``, ``group`` or ``siteGroup`` identities, and sharing ``link`` permissions with a ``scope`` of
@@ -16,8 +17,8 @@ SharePoint site groups by display name (``idp_groups``); ``organization`` links 
 ``organization_domain``; ``anonymous`` links -> the ``anyone`` principal (unset = nobody). Unmappable grantees are
 dropped (fail closed). Graph exposes no deny entries for drive items.
 
-A delta change does not always mean new content: Graph reports permission changes as item changes, and the
-indexer compares content hashes, so a sharing change rewrites ACL rows without re-embedding.
+A delta change does not always mean new content: with the Prefer header above, Graph reports sharing changes as
+item changes, and the indexer compares content hashes, so a sharing change rewrites ACL rows without re-embedding.
 """
 
 from __future__ import annotations
@@ -39,6 +40,8 @@ log = get_logger(__name__)
 GRAPH = "https://graph.microsoft.com/v1.0"
 SUPPORTED_SUFFIXES = (".md", ".txt", ".docx")
 READ_ROLES = {"read", "write", "owner", "sp.full control", "sp.edit", "sp.view"}
+# Ask Graph to report sharing (permission) changes as item changes, and deletions as deleted items.
+DELTA_PREFER = {"Prefer": "deltashowsharingchanges, deltashowremovedasdeleted"}
 
 
 @dataclass
@@ -70,9 +73,12 @@ class SharePointConnector:
         self.organization_domain = organization_domain
         self.http = http or httpx.Client(timeout=60, follow_redirects=True)
 
-    def _get(self, url: str, params: dict[str, Any] | None = None) -> httpx.Response:
+    def _get(
+        self, url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None
+    ) -> httpx.Response:
         full = url if url.startswith("https://") else f"{GRAPH}{url}"
-        response = self.http.get(full, params=params, headers={"Authorization": f"Bearer {self.tokens.token()}"})
+        merged = {"Authorization": f"Bearer {self.tokens.token()}", **(headers or {})}
+        response = self.http.get(full, params=params, headers=merged)
         response.raise_for_status()
         return response
 
@@ -88,7 +94,7 @@ class SharePointConnector:
         batch = DeltaBatch()
         url: str | None = cursor or f"/drives/{self.drive_id}/root/delta"
         while url:
-            page = self._get(url).json()
+            page = self._get(url, headers=DELTA_PREFER).json()
             for item in page.get("value") or []:
                 if item.get("deleted") is not None:
                     batch.removed.append(str(item["id"]))
