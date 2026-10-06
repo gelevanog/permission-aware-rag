@@ -57,7 +57,7 @@ eval-offline:  ## Leak test (retrieval only), recall study, ACL-change and laten
 	uv run clearance eval latency
 
 eval:  ## Leak test with answers from the local model (Ollama) for Clearance and the baselines
-	uv run clearance eval leak --generate clearance,postfilter,unfiltered --provider ollama
+	uv run clearance eval leak --generate clearance,unfiltered --provider ollama
 
 eval-real:  ## Quality: local vs free cloud model, judged by a free cloud model (needs OPENROUTER_API_KEY)
 	uv run clearance eval quality
