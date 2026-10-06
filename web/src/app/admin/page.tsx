@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { AnswerView } from "@/components/AnswerView";
 import { Avatar } from "@/components/Avatar";
@@ -23,24 +23,25 @@ export default function AdminPage() {
   const [filter, setFilter] = useState("");
   const [forbidden, setForbidden] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    if (!user) return;
-    try {
-      const token = await tokenFor(user.email);
-      const [docs, dir] = await Promise.all([api.adminDocuments(token), api.adminDirectory(token)]);
-      setDocuments(docs);
-      setDirectory(dir);
-      setForbidden(false);
-      setSelectedId((current) => current ?? docs.find((d) => d.external_id.includes("career-ladder"))?.id ?? docs[0]?.id ?? null);
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 403) setForbidden(true);
-    }
-  }, [user, tokenFor]);
+  const [version, setVersion] = useState(0);
+  const reload = () => setVersion((v) => v + 1);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!user) return;
+    tokenFor(user.email)
+      .then((token) => Promise.all([api.adminDocuments(token), api.adminDirectory(token)]))
+      .then(([docs, dir]) => {
+        setDocuments(docs);
+        setDirectory(dir);
+        setForbidden(false);
+        setSelectedId(
+          (current) => current ?? docs.find((d) => d.external_id.includes("career-ladder"))?.id ?? docs[0]?.id ?? null,
+        );
+      })
+      .catch((error: unknown) => {
+        if (error instanceof ApiError && error.status === 403) setForbidden(true);
+      });
+  }, [user, tokenFor, version]);
 
   const groups = useMemo(() => {
     const visible = documents.filter((d) => `${d.path} ${d.title}`.toLowerCase().includes(filter.toLowerCase()));
@@ -131,7 +132,7 @@ export default function AdminPage() {
                 if (!user) return;
                 const result = await api.resync(await tokenFor(user.email));
                 setNotice(`Re-read the source folder: ${result.acl_updated} ACLs restored, ${result.unchanged} unchanged.`);
-                await load();
+                reload();
               }}
               className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
             >
@@ -156,11 +157,11 @@ export default function AdminPage() {
                 setNotice(
                   `Saved version ${result.acl_version}: ${result.chunks_updated} chunk ACL rows rewritten in ${ms(result.elapsed_ms)}. Nothing was re-embedded; the next question sees it.`,
                 );
-                await load();
+                reload();
               }}
             />
           )}
-          {selected && directory && <TryIt users={users} document={selected} tokenFor={tokenFor} />}
+          {selected && directory && <TryIt key={selected.id} users={users} document={selected} tokenFor={tokenFor} />}
         </section>
       </main>
     </div>
@@ -369,11 +370,12 @@ function TryIt({
   tokenFor: (email: string) => Promise<string>;
 }) {
   const [email, setEmail] = useState("dan.kim@fernhill.test");
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState(
+    document.external_id.includes("career-ladder")
+      ? "What is the salary band for a Senior Engineer (L4)?"
+      : `What does "${document.title}" say?`,
+  );
   const ask = useAsk(tokenFor);
-  useEffect(() => {
-    setQuestion(document.external_id.includes("career-ladder") ? "What is the salary band for a Senior Engineer (L4)?" : `What does "${document.title}" say?`);
-  }, [document]);
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-5">
       <p className="text-sm font-semibold text-zinc-900">Try it: ask as someone else</p>

@@ -43,7 +43,7 @@ export function AnswerView({ state, compact = false }: { state: AnswerState; com
         <div>
           <p className="font-medium text-zinc-800">{answer.text}</p>
           <p className="mt-1 text-xs text-zinc-500">
-            Same reply whether the answer is in a document you can't open or nowhere at all.
+            Same reply whether the answer is in a document you can&apos;t open or nowhere at all.
           </p>
         </div>
       </div>

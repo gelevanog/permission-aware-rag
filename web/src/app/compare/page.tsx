@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 import { AnswerView } from "@/components/AnswerView";
 import { Avatar } from "@/components/Avatar";
@@ -23,21 +24,22 @@ const PRESETS: { question: string; left: string; right: string }[] = [
 const email = (local: string) => `${local}@fernhill.test`;
 
 export default function ComparePage() {
+  return (
+    <Suspense>
+      <Compare />
+    </Suspense>
+  );
+}
+
+function Compare() {
   const { users, tokenFor } = useSession();
-  const [left, setLeft] = useState(email(PRESETS[0].left));
-  const [right, setRight] = useState(email(PRESETS[0].right));
-  const [question, setQuestion] = useState(PRESETS[0].question);
+  const params = useSearchParams(); // ?q=...&a=erin.walsh&b=dan.kim preselects a comparison
+  const [left, setLeft] = useState(email(params.get("a") ?? PRESETS[0].left));
+  const [right, setRight] = useState(email(params.get("b") ?? PRESETS[0].right));
+  const [question, setQuestion] = useState(params.get("q") ?? PRESETS[0].question);
   const leftAsk = useAsk(tokenFor);
   const rightAsk = useAsk(tokenFor);
   const busy = [leftAsk.state, rightAsk.state].some((s) => s?.status === "searching" || s?.status === "streaming");
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get("q");
-    if (q) setQuestion(q);
-    if (params.get("a")) setLeft(email(params.get("a") as string));
-    if (params.get("b")) setRight(email(params.get("b") as string));
-  }, []);
 
   const run = (q: string, a = left, b = right) => {
     if (!q.trim()) return;

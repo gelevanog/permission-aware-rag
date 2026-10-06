@@ -7,7 +7,7 @@ import { Avatar } from "@/components/Avatar";
 import { Header } from "@/components/Header";
 import { LogoIcon, SendIcon } from "@/components/icons";
 import { TracePanel } from "@/components/TracePanel";
-import { api, streamAsk, type Trace } from "@/lib/api";
+import { api, streamAsk, type DemoUser, type Trace } from "@/lib/api";
 import { useSession } from "@/lib/session";
 
 interface Turn {
@@ -26,7 +26,13 @@ const SUGGESTIONS: Record<string, string[]> = {
 };
 
 export default function ChatPage() {
-  const { user, tokenFor, error } = useSession();
+  const { user } = useSession();
+  // Keyed by user: switching who is signed in starts a fresh conversation.
+  return <Chat key={user?.email ?? "nobody"} user={user} />;
+}
+
+function Chat({ user }: { user: DemoUser | null }) {
+  const { tokenFor, error } = useSession();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [input, setInput] = useState("");
@@ -35,10 +41,6 @@ export default function ChatPage() {
   const bottom = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // A different person is signed in: start a fresh conversation and show their principals.
-    setTurns([]);
-    setSelected(null);
-    setPrincipals([]);
     if (!user) return;
     tokenFor(user.email)
       .then((token) => api.me(token))

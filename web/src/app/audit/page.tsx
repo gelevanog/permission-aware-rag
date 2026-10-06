@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Avatar } from "@/components/Avatar";
 import { Header } from "@/components/Header";
@@ -23,22 +23,21 @@ export default function AuditPage() {
   const [documents, setDocuments] = useState<AdminDocument[]>([]);
   const [forbidden, setForbidden] = useState(false);
 
-  const load = useCallback(async () => {
-    if (!user) return;
-    try {
-      const token = await tokenFor(user.email);
-      const [log, docs] = await Promise.all([api.audit(token), api.adminDocuments(token)]);
-      setEntries(log);
-      setDocuments(docs);
-      setForbidden(false);
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 403) setForbidden(true);
-    }
-  }, [user, tokenFor]);
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!user) return;
+    tokenFor(user.email)
+      .then((token) => Promise.all([api.audit(token), api.adminDocuments(token)]))
+      .then(([log, docs]) => {
+        setEntries(log);
+        setDocuments(docs);
+        setForbidden(false);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof ApiError && error.status === 403) setForbidden(true);
+      });
+  }, [user, tokenFor, version]);
 
   const titles = useMemo(() => new Map(documents.map((d) => [d.id, d.title])), [documents]);
   const names = useMemo(() => new Map(users.map((u) => [`user:${u.email}`, u])), [users]);
@@ -74,7 +73,7 @@ export default function AuditPage() {
               retrieved, and how many of the nearest candidates permissions excluded. Excluded content is never logged.
             </p>
           </div>
-          <button type="button" onClick={() => void load()} className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50">
+          <button type="button" onClick={() => setVersion((v) => v + 1)} className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50">
             Refresh
           </button>
         </div>

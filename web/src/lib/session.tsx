@@ -20,18 +20,19 @@ const DEFAULT_USER = "dan.kim@fernhill.test";
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<DemoUser[]>([]);
-  const [email, setEmail] = useState<string>(DEFAULT_USER);
+  const [email, setEmail] = useState<string>(() => {
+    if (typeof window === "undefined") return DEFAULT_USER;
+    try {
+      return window.localStorage.getItem(STORAGE_KEY) ?? DEFAULT_USER;
+    } catch {
+      return DEFAULT_USER; // storage unavailable
+    }
+  });
   const [health, setHealth] = useState<Health | null>(null);
   const [error, setError] = useState<string | null>(null);
   const tokens = useRef(new Map<string, { token: string; expires: number }>());
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) setEmail(saved);
-    } catch {
-      // storage unavailable: keep the default user
-    }
     Promise.all([api.users(), api.health()])
       .then(([list, status]) => {
         setUsers(list);
