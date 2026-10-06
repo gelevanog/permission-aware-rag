@@ -85,6 +85,7 @@ def test_judge_verdict_parsing() -> None:
 
 
 def test_audit_preview_masks_numbers_emails_and_tokens() -> None:
-    preview = mask_preview("Is dan.kim@fernhill.test paid $171,500? token " + "sk_" + "live_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456")
+    fake_token = "sk_" + "live_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"  # split so secret scanners skip this fixture
+    preview = mask_preview(f"Is dan.kim@fernhill.test paid $171,500? token {fake_token}")
     assert "171" not in preview and "dan.kim" not in preview and "ABCDEF" not in preview
     assert len(mask_preview("x" * 500)) <= 60
