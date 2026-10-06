@@ -67,11 +67,11 @@ def test_signing_key_survives_restarts(tmp_path: Path) -> None:
 
 def test_expired_wrong_audience_and_wrong_issuer_are_rejected(idp: DevIdentityProvider) -> None:
     v = verifier(idp)
-    with pytest.raises(AuthError, match="(?i)expired"):
+    with pytest.raises(AuthError, match=r"(?i)expired"):
         v.verify(idp.issue("dan.kim@fernhill.test", now=time.time() - 10 * 3600))
-    with pytest.raises(AuthError, match="(?i)audience"):
+    with pytest.raises(AuthError, match=r"(?i)audience"):
         v.verify(idp.issue("dan.kim@fernhill.test", extra_claims={"aud": "someone-else"}))
-    with pytest.raises(AuthError, match="(?i)issuer"):
+    with pytest.raises(AuthError, match=r"(?i)issuer"):
         v.verify(idp.issue("dan.kim@fernhill.test", extra_claims={"iss": "https://evil.test"}))
 
 

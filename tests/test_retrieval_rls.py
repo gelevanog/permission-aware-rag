@@ -34,7 +34,8 @@ def _seed(writer: IndexWriter) -> dict[str, str]:
         writer.upsert(
             doc(
                 "ladder",
-                "## Levels\n\nSenior engineers lead projects.\n\n## Salary bands\n\nSenior engineer salary band 158,000.",
+                "## Levels\n\nSenior engineers lead projects.\n\n"
+                "## Salary bands\n\nSenior engineer salary band 158,000.",
                 allow=["group:engineering"],
                 deny=["group:contractors"],
                 sections={"Salary bands": ["group:hr"]},
@@ -115,7 +116,8 @@ def test_prefilter_returns_k_rows_through_the_hnsw_index(
             r[0]
             for r in connection.execute(
                 text(
-                    "EXPLAIN SELECT id FROM chunks ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
+                    "EXPLAIN SELECT id FROM chunks "
+                    "ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
                 )
             )
         )

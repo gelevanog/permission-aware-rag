@@ -97,7 +97,7 @@ def test_contact_policy_adds_a_generic_pointer(seeded: Services) -> None:
 def test_streaming_never_shows_the_not_found_marker(seeded: Services) -> None:
     assistant = _assistant(seeded, ScriptedModel("NOT_FOUND"))
     events = list(assistant.ask_stream(identity_for(seeded, "dan.kim@fernhill.test"), "Who won the hackathon?"))
-    assert [e["type"] for e in events][0] == "trace"
+    assert events[0]["type"] == "trace"
     assert not any(e["type"] == "token" and "NOT_FOUND" in e["text"] for e in events)
     assert events[-1]["answer"].text == DEFAULT_NO_ANSWER
 
