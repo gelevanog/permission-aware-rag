@@ -1,0 +1,4 @@
+inherit: true
+sections:
+  - heading: "Leadership follow-ups"
+    allow: [group:leadership]

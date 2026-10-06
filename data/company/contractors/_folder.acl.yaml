@@ -1,0 +1,2 @@
+allow: [group:contractors, group:hr, group:engineering]
+deny: []

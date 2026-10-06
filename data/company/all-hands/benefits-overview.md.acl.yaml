@@ -1,0 +1,4 @@
+inherit: true
+sections:
+  - heading: "Executive benefits"
+    allow: [group:leadership, group:hr]
