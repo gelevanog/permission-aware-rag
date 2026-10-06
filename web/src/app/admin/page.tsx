@@ -334,8 +334,16 @@ function PrincipalList({
 
 const ACCESS_STYLE: Record<Access, string> = {
   full: "bg-emerald-100 text-emerald-800",
-  partial: "bg-amber-100 text-amber-800",
+  body: "bg-amber-100 text-amber-800",
+  section: "bg-sky-100 text-sky-800",
   none: "bg-zinc-100 text-zinc-500",
+};
+
+const ACCESS_LABEL: Record<Access, string> = {
+  full: "full",
+  body: "not the restricted §",
+  section: "restricted § only",
+  none: "none",
 };
 
 function WhoCanRead({ acl, document, directory }: { acl: Acl; document: AdminDocument; directory: Directory }) {
@@ -350,7 +358,7 @@ function WhoCanRead({ acl, document, directory }: { acl: Acl; document: AdminDoc
               <Avatar name={u.name} email={u.email} size="sm" />
               <span className="flex-1 truncate text-zinc-700">{u.name}</span>
               <span className={cn("rounded-md px-1.5 py-0.5 text-[11px] font-medium", ACCESS_STYLE[access])}>
-                {access === "partial" ? "without restricted §" : access}
+                {ACCESS_LABEL[access]}
               </span>
             </li>
           );

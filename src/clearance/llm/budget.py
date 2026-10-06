@@ -132,6 +132,8 @@ class BudgetedModel:
         self.max_retries = max_retries
         self.retry_base_seconds = retry_base_seconds
         self.tag = tag
+        self.last_served: str | None = None
+        """The model that produced the most recent answer (OpenRouter may route to a fallback)."""
 
     @property
     def label(self) -> str:
@@ -157,6 +159,7 @@ class BudgetedModel:
             return self.inner.complete(messages, max_tokens=max_tokens, temperature=temperature)
         key = DiskCache.key(self.inner.label, messages, max_tokens, temperature)
         if self.cache is not None and (hit := self.cache.get(key)) is not None:
+            self.last_served = hit.model
             return hit
         last: LLMError | None = None
         for attempt in range(self.max_retries + 1):
@@ -174,6 +177,7 @@ class BudgetedModel:
                 raise
             else:
                 self._record("ok", started, completion=completion)
+                self.last_served = completion.model
                 if self.cache is not None:
                     self.cache.put(key, completion)
                 return completion

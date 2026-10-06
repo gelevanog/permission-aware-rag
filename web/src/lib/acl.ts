@@ -7,17 +7,20 @@ export function canRead(principals: string[], allow: string[], deny: string[]): 
   return allow.some((p) => reader.has(p));
 }
 
-export type Access = "full" | "partial" | "none";
+export type Access = "full" | "body" | "section" | "none";
 
-/** Full: every section readable; partial: some sections hidden by an override; none: nothing readable. */
+/**
+ * full: everything; body: the document but not its restricted section(s); section: only a restricted section
+ * (granted by an override, e.g. HR reading the salary bands of an engineering doc); none: nothing.
+ */
 export function accessFor(principals: string[], acl: Acl, headings: string[]): Access {
   const body = canRead(principals, acl.allow, acl.deny);
-  const sectionResults = acl.sections
+  const sections = acl.sections
     .filter((rule) => headings.some((h) => h.toLowerCase() === rule.heading.toLowerCase()))
     .map((rule) => canRead(principals, rule.allow, [...acl.deny, ...rule.deny]));
-  const all = [body, ...sectionResults];
-  if (all.every(Boolean)) return "full";
-  if (all.some(Boolean)) return "partial";
+  if (body && sections.every(Boolean)) return "full";
+  if (body) return "body";
+  if (sections.some(Boolean)) return "section";
   return "none";
 }
 

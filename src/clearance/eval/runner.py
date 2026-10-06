@@ -429,6 +429,7 @@ def run_quality(
                 "timings_ms": {key: round(value) for key, value in answer.trace.timings_ms.items()},
                 "wall_ms": round(elapsed),
                 "fallback": answer.trace.fallback,
+                "served_model": getattr(model, "last_served", None) or model.label,
             }
             if question.answerable and answer.outcome == "answered" and judge is not None:
                 context = ctx.context_of(

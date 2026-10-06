@@ -15,9 +15,13 @@ NoAnswerPolicy = Literal["generic", "contact"]
 
 # The local model chosen by measurement (README > Local models): good enough answers at an acceptable CPU latency.
 DEFAULT_LOCAL_MODEL = "qwen3.5:4b"
-# Free OpenRouter models that answered in the smoke test before the real run (results/smoke.json).
-DEFAULT_FREE_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free"
-DEFAULT_FREE_FALLBACKS = ["dots-studio/dots-3-note-preview:free", "google/gemma-4-31b-it:free"]
+# Free OpenRouter models chosen from the smoke test before the real run (results/smoke.json, 2026-10-06):
+# nemotron-3-super and dots-3 answered; nemotron-3-ultra was overloaded and both Gemma 4 models rate-limited.
+DEFAULT_FREE_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
+DEFAULT_FREE_FALLBACKS = ["nvidia/nemotron-3-ultra-550b-a55b:free"]
+# The judge is a different model family from the cloud generator, so no model grades its own answers.
+DEFAULT_JUDGE_MODEL = "dots-studio/dots-3-note-preview:free"
+DEFAULT_JUDGE_FALLBACKS = ["google/gemma-4-31b-it:free"]
 DEFAULT_MODELS: dict[str, str] = {
     "extractive": "extractive",
     "ollama": DEFAULT_LOCAL_MODEL,

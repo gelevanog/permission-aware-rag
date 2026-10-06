@@ -34,7 +34,7 @@ export function Header({ showUser = true }: { showUser?: boolean }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-sm font-medium transition",
+                "rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition",
                 pathname === item.href ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900",
               )}
             >

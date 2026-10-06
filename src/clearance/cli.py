@@ -14,7 +14,7 @@ from rich.console import Console
 from rich.table import Table
 
 from clearance.acl import DocumentAcl, normalize_principals
-from clearance.config import LLMProviderKind, Settings, get_settings
+from clearance.config import LLMProviderKind, Settings
 from clearance.logging_config import configure_logging
 
 app = typer.Typer(help="Clearance: permission-aware RAG over company documents.", no_args_is_help=True)
@@ -27,7 +27,7 @@ err = Console(stderr=True)
 
 
 def _settings(**overrides: Any) -> Settings:
-    settings = get_settings()
+    settings = Settings()  # read the environment now (not the process-wide cached settings)
     configure_logging(settings.log_level, settings.log_format)
     return settings.model_copy(update={k: v for k, v in overrides.items() if v is not None})
 
@@ -306,7 +306,12 @@ def eval_quality(
     output: Annotated[Path, typer.Option()] = Path("results/quality.json"),
 ) -> None:
     """Answer quality on authorized questions: local vs free cloud model, judged by a free cloud model."""
-    from clearance.config import DEFAULT_FREE_FALLBACKS, DEFAULT_FREE_MODEL
+    from clearance.config import (
+        DEFAULT_FREE_FALLBACKS,
+        DEFAULT_FREE_MODEL,
+        DEFAULT_JUDGE_FALLBACKS,
+        DEFAULT_JUDGE_MODEL,
+    )
     from clearance.eval.judge import Judge
     from clearance.eval.runner import prepare, run_quality, write_json
     from clearance.llm.factory import budgeted, build_chat_model
@@ -323,8 +328,8 @@ def eval_quality(
             cloud,
             tag="generate",
         )
-        judge_id = judge_model or DEFAULT_FREE_FALLBACKS[0]
-        judge_fallbacks = [m for m in [DEFAULT_FREE_MODEL, *DEFAULT_FREE_FALLBACKS] if m != judge_id]
+        judge_id = judge_model or DEFAULT_JUDGE_MODEL
+        judge_fallbacks = [m for m in DEFAULT_JUDGE_FALLBACKS if m != judge_id]
         judge = Judge(
             budgeted(
                 build_chat_model(cloud, provider="openrouter", model=judge_id, fallback_models=judge_fallbacks),
@@ -337,6 +342,25 @@ def eval_quality(
     write_json(output, result)
     for label, data in result["generators"].items():
         console.print(label, data["model"], data["summary"])
+
+
+@eval_app.command("local-models")
+def eval_local_models(
+    models: Annotated[str, typer.Option(help="Comma-separated Ollama models to compare")] = "qwen3.5:4b,qwen3.5:latest",
+    output: Annotated[Path, typer.Option()] = Path("results/local_models.json"),
+) -> None:
+    """Compare local models on the authorized questions (speed and key-fact check; no judge, no API calls)."""
+    from clearance.eval.runner import prepare, run_quality, write_json
+    from clearance.llm.factory import build_chat_model
+
+    settings = _settings()
+    names = [m.strip() for m in models.split(",") if m.strip()]
+    generators = {name: build_chat_model(settings, provider="ollama", model=name) for name in names}
+    ctx = prepare(settings, model=_extractive())
+    result = run_quality(ctx, generators, None, log_prefix="local")
+    write_json(output, result)
+    for label, data in result["generators"].items():
+        console.print(label, data["summary"])
 
 
 @eval_app.command("acl-change")
@@ -383,6 +407,10 @@ def eval_models(
     result = smoke_test(settings, free, preferred=preferred, count=smoke)
     from clearance.eval.runner import write_json
 
+    if output.exists():  # keep earlier smoke rows: the file is the record of every model tried
+        previous = json.loads(output.read_text(encoding="utf-8"))
+        result["smoke"] = [*previous.get("smoke", []), *result["smoke"]]
+        result["preferred"] = list(dict.fromkeys([*previous.get("preferred", []), *result["preferred"]]))
     write_json(output, result)
     for row in result["smoke"]:
         console.print(row)
