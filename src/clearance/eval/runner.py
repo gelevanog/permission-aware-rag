@@ -477,8 +477,8 @@ def summarize_quality(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "answerable": len(answerable),
         "errors": len(rows) - len(ok),
         # Refusals count as incorrect: correctness is over all answerable questions, not only answered ones.
-        "correct": correct,
-        "correctness": rate(correct, len(answerable)),
+        "correct": correct if judged else None,
+        "correctness": rate(correct, len(answerable)) if judged else None,
         "judged": len(judged),
         "faithfulness": rate(sum(1 for r in faithful_judged if r["judge"]["faithful"]), len(faithful_judged)),
         "expect_met": rate(sum(1 for r in answerable if r["expect_met"]), len(answerable)),

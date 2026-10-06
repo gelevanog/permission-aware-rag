@@ -1,0 +1,692 @@
+{
+ "date": "2026-10-06",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "revocations": {
+  "trials": 49,
+  "excluded_on_next_query": 49,
+  "excluded_under_rls_only": 49,
+  "hidden_from_document_list": 49,
+  "back_after_restore": 49,
+  "embeddings_computed": 0,
+  "acl_update_ms": {
+   "n": 49,
+   "p50": 5.3,
+   "p95": 6.7,
+   "mean": 5.6,
+   "max": 16.1
+  },
+  "next_query_ms": {
+   "n": 49,
+   "p50": 7.7,
+   "p95": 8.9,
+   "mean": 7.0,
+   "max": 9.2
+  }
+ },
+ "deletions": {
+  "trials": 10,
+  "gone_on_next_query": 10,
+  "delete_ms": {
+   "n": 10,
+   "p50": 1.5,
+   "p95": 2.3,
+   "mean": 1.7,
+   "max": 2.4
+  },
+  "reingest_with_embedding_ms": {
+   "n": 10,
+   "p50": 145.2,
+   "p95": 188.8,
+   "mean": 151.8,
+   "max": 192.4
+  }
+ },
+ "trial_rows": [
+  {
+   "question": "q01",
+   "user": "dan.kim@fernhill.test",
+   "document": "all-hands/employee-handbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 16.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q02",
+   "user": "frank.moreau@fernhill.test",
+   "document": "all-hands/travel-policy.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 6.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q03",
+   "user": "alice.chen@fernhill.test",
+   "document": "all-hands/travel-policy.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q04",
+   "user": "carol.diaz@fernhill.test",
+   "document": "all-hands/remote-work-policy.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q05",
+   "user": "julia.romero@fernhill.test",
+   "document": "all-hands/expense-policy.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q06",
+   "user": "ian.brooks@fernhill.test",
+   "document": "all-hands/it-helpdesk-faq.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 6.6,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q07",
+   "user": "grace.liu@fernhill.test",
+   "document": "all-hands/parental-leave-policy.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q08",
+   "user": "hana.sato@fernhill.test",
+   "document": "all-hands/code-of-conduct.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q09",
+   "user": "erin.walsh@fernhill.test",
+   "document": "all-hands/office-guide.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 5.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q10",
+   "user": "dan.kim@fernhill.test",
+   "document": "all-hands/product-overview-routeiq.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 4.8,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q11",
+   "user": "kofi.mensah@fernhill.test",
+   "document": "all-hands/compensation-philosophy.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.4,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q12",
+   "user": "frank.moreau@fernhill.test",
+   "document": "all-hands/holiday-calendar-2026.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.0,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q13",
+   "user": "dan.kim@fernhill.test",
+   "document": "all-hands/learning-and-development.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 6.8,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q14",
+   "user": "alice.chen@fernhill.test",
+   "document": "all-hands/ceo-priorities-2027.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 4.4,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q15",
+   "user": "bob.tanner@fernhill.test",
+   "document": "all-hands/it-security-basics.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.7,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q16",
+   "user": "dan.kim@fernhill.test",
+   "document": "sales/competitor-battlecard.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.3,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q17",
+   "user": "frank.moreau@fernhill.test",
+   "document": "legal/contract-templates-guide.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q18",
+   "user": "ian.brooks@fernhill.test",
+   "document": "engineering/security-incident-response-plan.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 7.3,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q19",
+   "user": "bob.tanner@fernhill.test",
+   "document": "contractors/contractor-onboarding.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.7,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q20",
+   "user": "bob.tanner@fernhill.test",
+   "document": "engineering/deployment-process.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q21",
+   "user": "bob.tanner@fernhill.test",
+   "document": "engineering/api-design-guidelines.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q22",
+   "user": "dan.kim@fernhill.test",
+   "document": "engineering/on-call-handbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q23",
+   "user": "dan.kim@fernhill.test",
+   "document": "engineering/incident-postmortem-2026-08-routing-outage.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.4,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q24",
+   "user": "erin.walsh@fernhill.test",
+   "document": "engineering/production-access-runbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.5,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q25",
+   "user": "dan.kim@fernhill.test",
+   "document": "engineering/tech-debt-roadmap-2027.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.7,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q26",
+   "user": "erin.walsh@fernhill.test",
+   "document": "engineering/engineering-career-ladder.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.8,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q27",
+   "user": "alice.chen@fernhill.test",
+   "document": "finance/q3-2026-financial-results.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.7,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q28",
+   "user": "kofi.mensah@fernhill.test",
+   "document": "finance/customer-revenue-concentration.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.0,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q29",
+   "user": "alice.chen@fernhill.test",
+   "document": "finance/vendor-payments-runbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.6,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q30",
+   "user": "alice.chen@fernhill.test",
+   "document": "finance/audit-prep-2026.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.8,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q31",
+   "user": "kofi.mensah@fernhill.test",
+   "document": "finance/budget-2027-draft.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.8,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q32",
+   "user": "carol.diaz@fernhill.test",
+   "document": "hr/compensation-review-2026.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.3,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q33",
+   "user": "carol.diaz@fernhill.test",
+   "document": "hr/headcount-plan-2027.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q34",
+   "user": "julia.romero@fernhill.test",
+   "document": "hr/manager-guide-performance-reviews.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.5,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q35",
+   "user": "carol.diaz@fernhill.test",
+   "document": "hr/hr-team-handbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 6.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q36",
+   "user": "frank.moreau@fernhill.test",
+   "document": "sales/key-accounts-notes.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 5.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q37",
+   "user": "frank.moreau@fernhill.test",
+   "document": "sales/sales-compensation-plan-2026.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.5,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q38",
+   "user": "julia.romero@fernhill.test",
+   "document": "sales/sales-playbook.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.6,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q39",
+   "user": "frank.moreau@fernhill.test",
+   "document": "sales/q4-2026-pipeline-review.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q40",
+   "user": "grace.liu@fernhill.test",
+   "document": "legal/veltrix-dispute-memo.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.3,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q41",
+   "user": "grace.liu@fernhill.test",
+   "document": "legal/trademark-portfolio.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q42",
+   "user": "hana.sato@fernhill.test",
+   "document": "leadership/project-kingfisher-acquisition-memo.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 4.3,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q43",
+   "user": "kofi.mensah@fernhill.test",
+   "document": "leadership/board-meeting-minutes-2026-09.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 6.6,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q44",
+   "user": "carol.diaz@fernhill.test",
+   "document": "leadership/reorg-plan-operation-driftwood.md",
+   "chunks_updated": 7,
+   "acl_update_ms": 6.1,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q45",
+   "user": "hana.sato@fernhill.test",
+   "document": "leadership/leadership-offsite-notes-2026.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.2,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q46",
+   "user": "bob.tanner@fernhill.test",
+   "document": "shared/bob-tanner-statement-of-work.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q47",
+   "user": "alice.chen@fernhill.test",
+   "document": "shared/alice-chen-relocation-letter.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 4.9,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q48",
+   "user": "frank.moreau@fernhill.test",
+   "document": "shared/frank-moreau-offer-letter.md",
+   "chunks_updated": 6,
+   "acl_update_ms": 5.5,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  },
+  {
+   "question": "q49",
+   "user": "ian.brooks@fernhill.test",
+   "document": "it/it-admin-runbook.md",
+   "chunks_updated": 5,
+   "acl_update_ms": 4.7,
+   "excluded_on_next_query": true,
+   "excluded_under_rls_only": true,
+   "hidden_from_document_list": true,
+   "back_after_restore": true,
+   "embeddings_computed": 0
+  }
+ ],
+ "deletion_rows": [
+  {
+   "document": "all-hands/employee-handbook.md",
+   "delete_ms": 2.4,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/travel-policy.md",
+   "delete_ms": 1.4,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/travel-policy.md",
+   "delete_ms": 1.5,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/remote-work-policy.md",
+   "delete_ms": 1.5,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/expense-policy.md",
+   "delete_ms": 2.0,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/it-helpdesk-faq.md",
+   "delete_ms": 1.4,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/parental-leave-policy.md",
+   "delete_ms": 1.5,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/code-of-conduct.md",
+   "delete_ms": 2.1,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/office-guide.md",
+   "delete_ms": 1.8,
+   "gone_on_next_query": true
+  },
+  {
+   "document": "all-hands/product-overview-routeiq.md",
+   "delete_ms": 1.5,
+   "gone_on_next_query": true
+  }
+ ]
+}

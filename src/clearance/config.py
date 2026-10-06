@@ -14,7 +14,7 @@ EmbeddingProviderKind = Literal["fastembed", "hash"]
 NoAnswerPolicy = Literal["generic", "contact"]
 
 # The local model chosen by measurement (README > Local models): good enough answers at an acceptable CPU latency.
-DEFAULT_LOCAL_MODEL = "qwen3.5:4b"
+DEFAULT_LOCAL_MODEL = "qwen3.5:4b"  # results/local_models.json: 96% vs 98% key facts at 0.66x the latency of 9.7B
 # Free OpenRouter models chosen from the smoke test before the real run (results/smoke.json, 2026-10-06):
 # nemotron-3-super and dots-3 answered; nemotron-3-ultra was overloaded and both Gemma 4 models rate-limited.
 DEFAULT_FREE_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
