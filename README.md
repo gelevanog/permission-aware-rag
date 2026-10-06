@@ -11,6 +11,10 @@
 ![mypy strict](https://img.shields.io/badge/mypy-strict-2a6db2)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
+https://github.com/user-attachments/assets/73140b21-c65b-4399-8389-e554e5115aad
+
+<sub>62-second walkthrough with voiceover. Can't play it? [Download the MP4](docs/demo.mp4).</sub>
+
 ![Same question, two users: the VP Engineering gets the salary band with citations, the engineer gets "not available to you"](docs/screenshots/two-users.png)
 
 <sub>The same question asked by two employees of the demo company, answered by the local model (`qwen3.5:4b` on CPU). Erin (VP Engineering, in the managers group) may read the "Salary bands" section of the engineering career ladder and gets the band with citations. Dan (an engineer) may read the rest of that document but not that section, so the section never reaches the model and he gets the fixed reply, worded exactly as if the answer existed nowhere.</sub>
