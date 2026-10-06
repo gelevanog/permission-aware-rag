@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 import time
-from collections.abc import Iterator, Sequence
+from collections.abc import Generator, Iterator, Sequence
 from dataclasses import asdict, dataclass, field, replace
 from typing import Any
 
@@ -254,7 +254,7 @@ class Assistant:
         yield {"type": "done", "answer": answer}
         self._audit(identity, question, answer, vector, int(trace.timings_ms["total"]))
 
-    def _generate(self, messages: list[Message], trace: Trace) -> Iterator[dict[str, Any]]:
+    def _generate(self, messages: list[Message], trace: Trace) -> Generator[dict[str, Any], None, str]:
         """Streams tokens; holds back the first few characters so a NOT_FOUND reply is never shown to the user."""
         model: ChatModel = self.model
         try:

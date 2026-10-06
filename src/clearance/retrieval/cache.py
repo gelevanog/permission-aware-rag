@@ -14,16 +14,13 @@ import threading
 import time
 from collections import OrderedDict
 from collections.abc import Sequence
-from typing import Generic, TypeVar
-
-T = TypeVar("T")
 
 
 def principals_hash(principals: Sequence[str]) -> str:
     return hashlib.sha256("\n".join(sorted(set(principals))).encode("utf-8")).hexdigest()[:16]
 
 
-class PermissionScopedCache(Generic[T]):
+class PermissionScopedCache[T]:
     def __init__(self, *, max_entries: int = 2000, ttl_seconds: float = 600.0, enabled: bool = True) -> None:
         self.max_entries = max_entries
         self.ttl_seconds = ttl_seconds
