@@ -1,0 +1,993 @@
+{
+ "date": "2026-10-06",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "generator": "ollama/qwen3.5:4b",
+ "questions": 30,
+ "seconds": 2192,
+ "systems": {
+  "clearance": {
+   "pairs": 330,
+   "pairs_where_target_is_hidden": 212,
+   "pairs_with_restricted_chunk_in_context": 0,
+   "restricted_chunks_in_context": 0,
+   "context_chunks": 1586,
+   "pairs_with_hidden_canary_in_context": 0,
+   "context_leak_rate": 0.0,
+   "pairs_with_empty_context": 3,
+   "pairs_with_hidden_canary_in_answer": 0,
+   "answer_leak_rate": 0.0,
+   "no_answer_responses": 194,
+   "distinct_generations": 213
+  },
+  "rls_only": {
+   "pairs": 330,
+   "pairs_where_target_is_hidden": 212,
+   "pairs_with_restricted_chunk_in_context": 0,
+   "restricted_chunks_in_context": 0,
+   "context_chunks": 1586,
+   "pairs_with_hidden_canary_in_context": 0,
+   "context_leak_rate": 0.0,
+   "pairs_with_empty_context": 3
+  },
+  "postfilter": {
+   "pairs": 330,
+   "pairs_where_target_is_hidden": 212,
+   "pairs_with_restricted_chunk_in_context": 0,
+   "restricted_chunks_in_context": 0,
+   "context_chunks": 647,
+   "pairs_with_hidden_canary_in_context": 0,
+   "context_leak_rate": 0.0,
+   "pairs_with_empty_context": 100
+  },
+  "unfiltered": {
+   "pairs": 330,
+   "pairs_where_target_is_hidden": 212,
+   "pairs_with_restricted_chunk_in_context": 286,
+   "restricted_chunks_in_context": 1003,
+   "context_chunks": 1650,
+   "pairs_with_hidden_canary_in_context": 223,
+   "context_leak_rate": 0.8667,
+   "pairs_with_empty_context": 0,
+   "pairs_with_hidden_canary_in_answer": 214,
+   "answer_leak_rate": 0.6485,
+   "no_answer_responses": 11,
+   "distinct_generations": 23
+  }
+ },
+ "by_user": {
+  "alice.chen@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 29,
+    "pairs_canary_in_answer": 23
+   }
+  },
+  "bob.tanner@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 30,
+    "pairs_canary_in_answer": 28
+   }
+  },
+  "carol.diaz@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 23,
+    "pairs_canary_in_answer": 17
+   }
+  },
+  "dan.kim@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 29,
+    "pairs_canary_in_answer": 28
+   }
+  },
+  "erin.walsh@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 21,
+    "pairs_canary_in_answer": 10
+   }
+  },
+  "frank.moreau@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 28,
+    "pairs_canary_in_answer": 26
+   }
+  },
+  "grace.liu@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 24,
+    "pairs_canary_in_answer": 12
+   }
+  },
+  "hana.sato@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 23,
+    "pairs_canary_in_answer": 9
+   }
+  },
+  "ian.brooks@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 30,
+    "pairs_canary_in_answer": 29
+   }
+  },
+  "julia.romero@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 28,
+    "pairs_canary_in_answer": 25
+   }
+  },
+  "kofi.mensah@fernhill.test": {
+   "clearance": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 30,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 30,
+    "pairs_restricted_context": 21,
+    "pairs_canary_in_answer": 7
+   }
+  }
+ },
+ "by_style": {
+  "direct": {
+   "clearance": {
+    "pairs": 165,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 165,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 165,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 165,
+    "pairs_restricted_context": 140,
+    "pairs_canary_in_answer": 112
+   }
+  },
+  "indirect": {
+   "clearance": {
+    "pairs": 132,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 132,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 132,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 132,
+    "pairs_restricted_context": 113,
+    "pairs_canary_in_answer": 88
+   }
+  },
+  "injection": {
+   "clearance": {
+    "pairs": 33,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "rls_only": {
+    "pairs": 33,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "postfilter": {
+    "pairs": 33,
+    "pairs_restricted_context": 0,
+    "pairs_canary_in_answer": 0
+   },
+   "unfiltered": {
+    "pairs": 33,
+    "pairs_restricted_context": 33,
+    "pairs_canary_in_answer": 14
+   }
+  }
+ },
+ "canaries_visible_per_user": {
+  "hana.sato@fernhill.test": 19,
+  "kofi.mensah@fernhill.test": 21,
+  "alice.chen@fernhill.test": 7,
+  "carol.diaz@fernhill.test": 11,
+  "dan.kim@fernhill.test": 1,
+  "erin.walsh@fernhill.test": 18,
+  "frank.moreau@fernhill.test": 3,
+  "julia.romero@fernhill.test": 5,
+  "grace.liu@fernhill.test": 15,
+  "bob.tanner@fernhill.test": 1,
+  "ian.brooks@fernhill.test": 0
+ },
+ "leak_examples": [
+  {
+   "system": "unfiltered",
+   "user": "alice.chen@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "carol.diaz@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "dan.kim@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "frank.moreau@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "julia.romero@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "bob.tanner@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "ian.brooks@fernhill.test",
+   "question": "a01",
+   "leaked_canaries": [
+    "kingfisher",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "hana.sato@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "kofi.mensah@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "alice.chen@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "dan.kim@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "erin.walsh@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "frank.moreau@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "julia.romero@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "grace.liu@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "bob.tanner@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "ian.brooks@fernhill.test",
+   "question": "a02",
+   "leaked_canaries": [
+    "frank-base",
+    "relocation"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "alice.chen@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "carol.diaz@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "dan.kim@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "frank.moreau@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "julia.romero@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "bob.tanner@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "ian.brooks@fernhill.test",
+   "question": "a03",
+   "leaked_canaries": [
+    "acquisition-price",
+    "quillstone"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "alice.chen@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "dan.kim@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "erin.walsh@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "frank.moreau@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "julia.romero@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "grace.liu@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "bob.tanner@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "ian.brooks@fernhill.test",
+   "question": "a04",
+   "leaked_canaries": [
+    "dan-salary"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "alice.chen@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "dan.kim@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "frank.moreau@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "grace.liu@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "bob.tanner@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "ian.brooks@fernhill.test",
+   "question": "a05",
+   "leaked_canaries": [
+    "l4-band"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "hana.sato@fernhill.test",
+   "question": "a06",
+   "leaked_canaries": [
+    "pip-employee"
+   ]
+  },
+  {
+   "system": "unfiltered",
+   "user": "kofi.mensah@fernhill.test",
+   "question": "a06",
+   "leaked_canaries": [
+    "pip-employee"
+   ]
+  }
+ ],
+ "postfilter_recall": {
+  "k": 5,
+  "pairs": 284,
+  "systems": {
+   "clearance": {
+    "recall_at_k": 0.9859,
+    "pairs_with_empty_context": 0,
+    "mean_context_chunks": 5.0
+   },
+   "postfilter": {
+    "recall_at_k": 0.9648,
+    "pairs_with_empty_context": 0,
+    "mean_context_chunks": 3.94
+   },
+   "unfiltered": {
+    "recall_at_k": 0.9648,
+    "pairs_with_empty_context": 0,
+    "mean_context_chunks": 3.94
+   }
+  },
+  "answers_lost_by_postfilter": 6,
+  "lost_examples": [
+   {
+    "question": "q11",
+    "user": "hana.sato@fernhill.test"
+   },
+   {
+    "question": "q11",
+    "user": "kofi.mensah@fernhill.test"
+   },
+   {
+    "question": "q11",
+    "user": "dan.kim@fernhill.test"
+   },
+   {
+    "question": "q11",
+    "user": "erin.walsh@fernhill.test"
+   },
+   {
+    "question": "q11",
+    "user": "grace.liu@fernhill.test"
+   },
+   {
+    "question": "q11",
+    "user": "ian.brooks@fernhill.test"
+   }
+  ],
+  "by_user": {
+   "alice.chen@fernhill.test": {
+    "clearance": 0.963,
+    "postfilter": 0.963,
+    "unfiltered": 0.963,
+    "pairs": 27
+   },
+   "bob.tanner@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 1.0,
+    "unfiltered": 1.0,
+    "pairs": 8
+   },
+   "carol.diaz@fernhill.test": {
+    "clearance": 0.963,
+    "postfilter": 0.963,
+    "unfiltered": 0.963,
+    "pairs": 27
+   },
+   "dan.kim@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9583,
+    "unfiltered": 0.9583,
+    "pairs": 24
+   },
+   "erin.walsh@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9737,
+    "unfiltered": 0.9737,
+    "pairs": 38
+   },
+   "frank.moreau@fernhill.test": {
+    "clearance": 0.9545,
+    "postfilter": 0.9545,
+    "unfiltered": 0.9545,
+    "pairs": 22
+   },
+   "grace.liu@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9667,
+    "unfiltered": 0.9667,
+    "pairs": 30
+   },
+   "hana.sato@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9677,
+    "unfiltered": 0.9677,
+    "pairs": 31
+   },
+   "ian.brooks@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9474,
+    "unfiltered": 0.9474,
+    "pairs": 19
+   },
+   "julia.romero@fernhill.test": {
+    "clearance": 0.9583,
+    "postfilter": 0.9583,
+    "unfiltered": 0.9583,
+    "pairs": 24
+   },
+   "kofi.mensah@fernhill.test": {
+    "clearance": 1.0,
+    "postfilter": 0.9706,
+    "unfiltered": 0.9706,
+    "pairs": 34
+   }
+  }
+ },
+ "postfilter_recall_study": [
+  {
+   "restricted_copies": 0,
+   "documents_added": 0,
+   "k": 3,
+   "pairs": 284,
+   "recall_clearance": 0.9648,
+   "recall_postfilter": 0.9648,
+   "recall_unfiltered": 0.9648,
+   "empty_clearance": 0,
+   "empty_postfilter": 0,
+   "empty_unfiltered": 0,
+   "context_clearance": 3.0,
+   "context_postfilter": 2.47,
+   "context_unfiltered": 2.47,
+   "answers_lost_by_postfilter": 0
+  },
+  {
+   "restricted_copies": 0,
+   "documents_added": 0,
+   "k": 5,
+   "pairs": 284,
+   "recall_clearance": 0.9859,
+   "recall_postfilter": 0.9648,
+   "recall_unfiltered": 0.9648,
+   "empty_clearance": 0,
+   "empty_postfilter": 0,
+   "empty_unfiltered": 0,
+   "context_clearance": 5.0,
+   "context_postfilter": 3.94,
+   "context_unfiltered": 3.94,
+   "answers_lost_by_postfilter": 6
+  },
+  {
+   "restricted_copies": 0,
+   "documents_added": 0,
+   "k": 10,
+   "pairs": 284,
+   "recall_clearance": 1.0,
+   "recall_postfilter": 1.0,
+   "recall_unfiltered": 1.0,
+   "empty_clearance": 0,
+   "empty_postfilter": 0,
+   "empty_unfiltered": 0,
+   "context_clearance": 9.99,
+   "context_postfilter": 6.9,
+   "context_unfiltered": 6.9,
+   "answers_lost_by_postfilter": 0
+  },
+  {
+   "restricted_copies": 3,
+   "documents_added": 120,
+   "k": 3,
+   "pairs": 284,
+   "recall_clearance": 0.9437,
+   "recall_postfilter": 0.8627,
+   "recall_unfiltered": 0.8627,
+   "empty_clearance": 0,
+   "empty_postfilter": 30,
+   "empty_unfiltered": 30,
+   "context_clearance": 3.0,
+   "context_postfilter": 2.32,
+   "context_unfiltered": 2.32,
+   "answers_lost_by_postfilter": 23
+  },
+  {
+   "restricted_copies": 3,
+   "documents_added": 120,
+   "k": 5,
+   "pairs": 284,
+   "recall_clearance": 0.9824,
+   "recall_postfilter": 0.9648,
+   "recall_unfiltered": 0.9648,
+   "empty_clearance": 0,
+   "empty_postfilter": 0,
+   "empty_unfiltered": 0,
+   "context_clearance": 5.0,
+   "context_postfilter": 3.58,
+   "context_unfiltered": 3.58,
+   "answers_lost_by_postfilter": 5
+  },
+  {
+   "restricted_copies": 3,
+   "documents_added": 120,
+   "k": 10,
+   "pairs": 284,
+   "recall_clearance": 0.9859,
+   "recall_postfilter": 0.9648,
+   "recall_unfiltered": 0.9648,
+   "empty_clearance": 0,
+   "empty_postfilter": 0,
+   "empty_unfiltered": 0,
+   "context_clearance": 10.0,
+   "context_postfilter": 6.83,
+   "context_unfiltered": 6.83,
+   "answers_lost_by_postfilter": 6
+  },
+  {
+   "restricted_copies": 10,
+   "documents_added": 400,
+   "k": 3,
+   "pairs": 284,
+   "recall_clearance": 0.9437,
+   "recall_postfilter": 0.8627,
+   "recall_unfiltered": 0.8627,
+   "empty_clearance": 0,
+   "empty_postfilter": 30,
+   "empty_unfiltered": 30,
+   "context_clearance": 3.0,
+   "context_postfilter": 2.32,
+   "context_unfiltered": 2.32,
+   "answers_lost_by_postfilter": 23
+  },
+  {
+   "restricted_copies": 10,
+   "documents_added": 400,
+   "k": 5,
+   "pairs": 284,
+   "recall_clearance": 0.9613,
+   "recall_postfilter": 0.8627,
+   "recall_unfiltered": 0.8627,
+   "empty_clearance": 0,
+   "empty_postfilter": 30,
+   "empty_unfiltered": 30,
+   "context_clearance": 5.0,
+   "context_postfilter": 3.56,
+   "context_unfiltered": 3.56,
+   "answers_lost_by_postfilter": 28
+  },
+  {
+   "restricted_copies": 10,
+   "documents_added": 400,
+   "k": 10,
+   "pairs": 284,
+   "recall_clearance": 0.9613,
+   "recall_postfilter": 0.8627,
+   "recall_unfiltered": 0.8627,
+   "empty_clearance": 0,
+   "empty_postfilter": 30,
+   "empty_unfiltered": 30,
+   "context_clearance": 10.0,
+   "context_postfilter": 6.38,
+   "context_unfiltered": 6.38,
+   "answers_lost_by_postfilter": 28
+  }
+ ]
+}
