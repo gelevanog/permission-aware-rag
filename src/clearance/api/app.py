@@ -315,14 +315,14 @@ def create_app(services: Services | None = None, settings: Settings | None = Non
         return {"deleted": str(document_id)}
 
     @app.post("/api/admin/documents")
-    async def upload_document(
+    def upload_document(
         user: Admin,
         services_: Svc,
         file: Annotated[UploadFile, File()],
         acl: Annotated[str, Form(description="ACL as YAML or JSON: allow, deny, sections")],
         path: Annotated[str, Form()] = "uploads",
     ) -> dict[str, Any]:
-        data = await file.read(MAX_UPLOAD_BYTES + 1)
+        data = file.file.read(MAX_UPLOAD_BYTES + 1)  # sync endpoint: parsing and embedding run in the threadpool
         if len(data) > MAX_UPLOAD_BYTES:
             raise HTTPException(413, "file too large (5 MB max)")
         try:
