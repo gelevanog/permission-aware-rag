@@ -1,0 +1,8 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)",
+  "@odata.deltaLink": "https://graph.microsoft.com/v1.0/drives/b!drive123/root/delta?token=cursor-1",
+  "value": [
+    {"id": "01HANDBOOK", "name": "handbook.md", "file": {"mimeType": "text/markdown"}, "lastModifiedDateTime": "2026-09-02T08:00:00Z", "webUrl": "https://fernhill.sharepoint.com/sites/company/Shared%20Documents/handbook.md", "parentReference": {"driveId": "b!drive123", "id": "01ROOT", "path": "/drive/root:"}},
+    {"id": "01LOGO", "name": "logo.png", "file": {"mimeType": "image/png"}, "parentReference": {"driveId": "b!drive123", "id": "01ROOT", "path": "/drive/root:"}}
+  ]
+}

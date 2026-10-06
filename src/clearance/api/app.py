@@ -65,6 +65,35 @@ class TokenRequest(BaseModel):
     email: str
 
 
+# ---- dependencies (module level, so FastAPI can resolve the annotations) ----------------------------------------
+def get_services(request: Request) -> Services:
+    services: Services | None = request.app.state.services
+    if services is None:
+        raise HTTPException(503, "starting up")
+    return services
+
+
+def get_identity(request: Request, authorization: Annotated[str | None, Header()] = None) -> Identity:
+    """The caller's identity from a verified bearer token; principals never come from anything else the client sends."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "missing bearer token", headers={"WWW-Authenticate": "Bearer"})
+    try:
+        return get_services(request).verifier.verify(authorization.split(" ", 1)[1].strip())
+    except AuthError as exc:
+        raise HTTPException(401, str(exc), headers={"WWW-Authenticate": "Bearer"}) from exc
+
+
+def get_admin(user: Annotated[Identity, Depends(get_identity)]) -> Identity:
+    if not user.is_admin:
+        raise HTTPException(403, "administrators only")
+    return user
+
+
+Svc = Annotated[Services, Depends(get_services)]
+User = Annotated[Identity, Depends(get_identity)]
+Admin = Annotated[Identity, Depends(get_admin)]
+
+
 # ---- app factory ------------------------------------------------------------------------------------------
 def create_app(services: Services | None = None, settings: Settings | None = None) -> FastAPI:
     settings = settings or (services.settings if services else get_settings())
@@ -93,29 +122,6 @@ def create_app(services: Services | None = None, settings: Settings | None = Non
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    def svc(request: Request) -> Services:
-        services_: Services | None = request.app.state.services
-        if services_ is None:
-            raise HTTPException(503, "starting up")
-        return services_
-
-    def identity(request: Request, authorization: Annotated[str | None, Header()] = None) -> Identity:
-        if not authorization or not authorization.lower().startswith("bearer "):
-            raise HTTPException(401, "missing bearer token", headers={"WWW-Authenticate": "Bearer"})
-        try:
-            return svc(request).verifier.verify(authorization.split(" ", 1)[1].strip())
-        except AuthError as exc:
-            raise HTTPException(401, str(exc), headers={"WWW-Authenticate": "Bearer"}) from exc
-
-    def admin(user: Annotated[Identity, Depends(identity)]) -> Identity:
-        if not user.is_admin:
-            raise HTTPException(403, "administrators only")
-        return user
-
-    Svc = Annotated[Services, Depends(svc)]  # noqa: N806
-    User = Annotated[Identity, Depends(identity)]  # noqa: N806
-    Admin = Annotated[Identity, Depends(admin)]  # noqa: N806
 
     # ---- health ---------------------------------------------------------------------------------------
     @app.get("/health")
@@ -230,9 +236,7 @@ def create_app(services: Services | None = None, settings: Settings | None = Non
     @app.get("/api/admin/documents")
     def admin_documents(_: Admin, services_: Svc) -> list[dict[str, Any]]:
         with services_.db.owner_session() as session:
-            counts = dict(
-                session.execute(select(Chunk.document_id, func.count()).group_by(Chunk.document_id)).tuples().all()
-            )
+            counts = dict(session.execute(select(Chunk.document_id, func.count()).group_by(Chunk.document_id)).all())
             headings: dict[uuid.UUID, list[str]] = {}
             for document_id, path in session.execute(select(Chunk.document_id, Chunk.section_path)):
                 for heading in path or []:

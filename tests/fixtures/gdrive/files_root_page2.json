@@ -1,0 +1,8 @@
+{
+  "kind": "drive#fileList",
+  "incompleteSearch": false,
+  "files": [
+    {"kind": "drive#file", "id": "img_logo", "name": "logo.png", "mimeType": "image/png", "parents": ["root_folder"], "trashed": false},
+    {"kind": "drive#file", "id": "md_onboarding", "name": "contractor-onboarding.md", "mimeType": "text/markdown", "parents": ["root_folder"], "trashed": false, "modifiedTime": "2026-08-14T15:01:02.000Z", "webViewLink": "https://drive.google.com/file/d/md_onboarding/view"}
+  ]
+}

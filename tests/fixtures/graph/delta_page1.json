@@ -1,0 +1,9 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)",
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/drives/b!drive123/root/delta?token=page2",
+  "value": [
+    {"id": "01ROOT", "name": "root", "root": {}, "folder": {"childCount": 2}, "parentReference": {"driveId": "b!drive123", "driveType": "documentLibrary"}},
+    {"id": "01FINANCE", "name": "Finance", "folder": {"childCount": 1}, "parentReference": {"driveId": "b!drive123", "id": "01ROOT", "path": "/drive/root:"}},
+    {"id": "01BUDGET", "name": "Budget 2027.docx", "file": {"mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "hashes": {"quickXorHash": "abc="}}, "lastModifiedDateTime": "2026-10-02T11:00:00Z", "webUrl": "https://fernhill.sharepoint.com/sites/company/Shared%20Documents/Finance/Budget%202027.docx", "parentReference": {"driveId": "b!drive123", "id": "01FINANCE", "path": "/drive/root:/Finance"}}
+  ]
+}

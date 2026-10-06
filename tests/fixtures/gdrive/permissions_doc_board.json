@@ -1,0 +1,11 @@
+{
+  "kind": "drive#permissionList",
+  "permissions": [
+    {"kind": "drive#permission", "id": "11", "type": "user", "role": "owner", "emailAddress": "kofi.mensah@fernhill.test"},
+    {"kind": "drive#permission", "id": "12", "type": "group", "role": "reader", "emailAddress": "leadership@fernhill.test", "permissionDetails": [{"permissionType": "file", "role": "reader", "inherited": true, "inheritedFrom": "fld_finance"}]},
+    {"kind": "drive#permission", "id": "13", "type": "group", "role": "writer", "emailAddress": "finance@fernhill.test"},
+    {"kind": "drive#permission", "id": "14", "type": "group", "role": "reader", "emailAddress": "board-observers@partner.example"},
+    {"kind": "drive#permission", "id": "anyoneWithLink", "type": "anyone", "role": "reader"},
+    {"kind": "drive#permission", "id": "15", "type": "user", "role": "reader", "emailAddress": "former.employee@fernhill.test", "deleted": true}
+  ]
+}

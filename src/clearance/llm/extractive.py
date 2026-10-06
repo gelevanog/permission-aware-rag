@@ -104,7 +104,7 @@ def extract_answer(prompt: str, *, max_sentences: int = 2) -> str:
             if overlap:
                 scored.append((overlap / len(wanted) + overlap * 0.01, number, sentence))
     scored.sort(key=lambda item: -item[0])
-    if not scored or scored[0][0] < 0.34:
+    if not scored or scored[0][0] < 0.4:
         return NOT_FOUND
     best = [item for item in scored[:max_sentences] if item[0] >= scored[0][0] * 0.75]
     return " ".join(f"{sentence.rstrip('.')} [{number}]." for _, number, sentence in best)

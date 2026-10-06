@@ -1,0 +1,7 @@
+{
+  "kind": "drive#permissionList",
+  "permissions": [
+    {"kind": "drive#permission", "id": "11", "type": "user", "role": "owner", "emailAddress": "kofi.mensah@fernhill.test"},
+    {"kind": "drive#permission", "id": "13", "type": "group", "role": "writer", "emailAddress": "finance@fernhill.test"}
+  ]
+}

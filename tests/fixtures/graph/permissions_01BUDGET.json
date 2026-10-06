@@ -1,0 +1,10 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#drives('b!drive123')/items('01BUDGET')/permissions",
+  "value": [
+    {"id": "aTowIy5mfG1lbWJlcnNoaXB8a29maQ", "roles": ["owner"], "grantedToV2": {"user": {"id": "a1b2", "displayName": "Kofi Mensah", "email": "kofi.mensah@fernhill.test"}}, "inheritedFrom": {"driveId": "b!drive123", "id": "01FINANCE"}},
+    {"id": "Z3JvdXA", "roles": ["write"], "grantedToV2": {"group": {"id": "9d41b7c2-5e3a-4f88-b2c6-7a1e0d3f4b02", "displayName": "Finance Team", "email": "finance@fernhill.test"}}},
+    {"id": "c2l0ZWdyb3Vw", "roles": ["read"], "grantedToV2": {"siteGroup": {"id": "5", "displayName": "FH-Leadership", "loginName": "FH-Leadership"}}},
+    {"id": "bGluaw", "roles": ["read"], "link": {"scope": "anonymous", "type": "view", "webUrl": "https://1drv.ms/w/s!anon"}},
+    {"id": "dW5rbm93bg", "roles": ["read"], "grantedToV2": {"group": {"id": "00000000-0000-0000-0000-00000000dead", "displayName": "External auditors"}}}
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "value": [
+    {"id": "aTowIy5mfG1lbWJlcnNoaXB8a29maQ", "roles": ["owner"], "grantedToV2": {"user": {"id": "a1b2", "displayName": "Kofi Mensah", "email": "kofi.mensah@fernhill.test"}}},
+    {"id": "Z3JvdXA", "roles": ["write"], "grantedToV2": {"group": {"id": "9d41b7c2-5e3a-4f88-b2c6-7a1e0d3f4b02", "displayName": "Finance Team"}}}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)",
+  "@odata.deltaLink": "https://graph.microsoft.com/v1.0/drives/b!drive123/root/delta?token=cursor-2",
+  "value": [
+    {"id": "01HANDBOOK", "name": "handbook.md", "deleted": {"state": "deleted"}, "parentReference": {"driveId": "b!drive123"}},
+    {"id": "01BUDGET", "name": "Budget 2027.docx", "file": {"mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}, "lastModifiedDateTime": "2026-10-04T09:00:00Z", "parentReference": {"driveId": "b!drive123", "id": "01FINANCE", "path": "/drive/root:/Finance"}}
+  ]
+}

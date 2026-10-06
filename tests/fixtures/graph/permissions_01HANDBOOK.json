@@ -1,0 +1,6 @@
+{
+  "value": [
+    {"id": "b3Jn", "roles": ["read"], "link": {"scope": "organization", "type": "view", "webUrl": "https://fernhill.sharepoint.com/:w:/s/company/abc"}},
+    {"id": "dXNlcnM", "roles": ["read"], "link": {"scope": "users", "type": "view"}, "grantedToIdentitiesV2": [{"user": {"id": "e1", "displayName": "Erin Walsh", "email": "erin.walsh@fernhill.test"}}, {"siteUser": {"id": "7", "displayName": "Bob Tanner", "loginName": "i:0#.f|membership|bob.tanner@fernhill.test"}}]}
+  ]
+}

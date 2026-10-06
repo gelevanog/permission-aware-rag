@@ -1,0 +1,9 @@
+{
+  "kind": "drive#fileList",
+  "incompleteSearch": false,
+  "nextPageToken": "page-2",
+  "files": [
+    {"kind": "drive#file", "id": "fld_finance", "name": "Finance", "mimeType": "application/vnd.google-apps.folder", "parents": ["root_folder"], "trashed": false, "modifiedTime": "2026-09-30T10:00:00.000Z"},
+    {"kind": "drive#file", "id": "doc_handbook", "name": "Employee Handbook", "mimeType": "application/vnd.google-apps.document", "parents": ["root_folder"], "trashed": false, "modifiedTime": "2026-09-02T08:12:44.000Z", "webViewLink": "https://docs.google.com/document/d/doc_handbook/edit", "owners": [{"kind": "drive#user", "displayName": "Carol Diaz", "emailAddress": "carol.diaz@fernhill.test"}]}
+  ]
+}

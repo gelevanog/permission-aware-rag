@@ -1,0 +1,7 @@
+{
+  "kind": "drive#permissionList",
+  "permissions": [
+    {"kind": "drive#permission", "id": "06321564598843925719", "type": "user", "role": "owner", "emailAddress": "carol.diaz@fernhill.test", "deleted": false, "permissionDetails": [{"permissionType": "file", "role": "owner", "inherited": false}]},
+    {"kind": "drive#permission", "id": "fernhill.testk", "type": "domain", "role": "reader", "domain": "fernhill.test", "permissionDetails": [{"permissionType": "file", "role": "reader", "inherited": true, "inheritedFrom": "root_folder"}]}
+  ]
+}
