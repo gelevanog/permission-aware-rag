@@ -1,0 +1,60 @@
+{
+ "date": "2026-10-06",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "embed_query_ms": {
+  "n": 84,
+  "p50": 4.2,
+  "p95": 5.3,
+  "mean": 4.3,
+  "max": 6.4
+ },
+ "retrieve_ms": {
+  "n": 924,
+  "p50": 5.0,
+  "p95": 6.8,
+  "mean": 5.1,
+  "max": 8.1
+ },
+ "retrieve_hnsw_forced_ms": {
+  "n": 924,
+  "p50": 5.1,
+  "p95": 6.7,
+  "mean": 5.1,
+  "max": 8.4
+ },
+ "hnsw_searches_returning_full_k": "924/924",
+ "generate_ms_local": {
+  "n": 54,
+  "p50": 8736.0,
+  "p95": 11962.9,
+  "mean": 8529.2,
+  "max": 13049
+ },
+ "end_to_end_ms_local": {
+  "n": 54,
+  "p50": 8756.0,
+  "p95": 11985.6,
+  "mean": 8549.6,
+  "max": 13068
+ },
+ "generate_ms_cloud": {
+  "n": 54,
+  "p50": 3087.0,
+  "p95": 12053.7,
+  "mean": 4707.5,
+  "max": 34445
+ },
+ "end_to_end_ms_cloud": {
+  "n": 54,
+  "p50": 3139.5,
+  "p95": 12132.1,
+  "mean": 4757.1,
+  "max": 34477
+ }
+}

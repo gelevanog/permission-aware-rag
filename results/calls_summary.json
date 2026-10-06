@@ -1,0 +1,31 @@
+{
+ "total_requests": 179,
+ "by_status": {
+  "retryable_error": 9,
+  "ok": 154,
+  "error": 16
+ },
+ "by_tag": {
+  "smoke": 5,
+  "judge": 115,
+  "generate": 54,
+  "generate-retry": 5
+ },
+ "requested_models": [
+  "dots-studio/dots-3-note-preview:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "google/gemma-4-31b-it:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "nvidia/nemotron-3-ultra-550b-a55b:free"
+ ],
+ "served_models": {
+  "dots-studio/dots-3-note-preview:free": 99,
+  "nvidia/nemotron-3-super-120b-a12b:free": 53,
+  "nvidia/nemotron-3-ultra-550b-a55b:free": 2
+ },
+ "all_model_ids_free": true,
+ "input_tokens": 126221,
+ "output_tokens": 84057,
+ "first": "2026-10-06T09:41:58+00:00",
+ "last": "2026-10-06T11:06:33+00:00"
+}
