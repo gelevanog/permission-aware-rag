@@ -1,0 +1,89 @@
+# Clearance: PostgreSQL + pgvector, the API (with the dev identity provider), the Next.js web app.
+#   docker compose up --build                      -> web on http://localhost:3000, API on http://localhost:8000
+#   docker compose --profile ollama up --build     -> also runs Ollama and pulls the local model (a few GB, once)
+# Without the ollama profile and without an Ollama on the host, answers fall back to quoting passages (labelled
+# "extractive (fallback)" in the UI). No API keys are needed for any of this. See README > Quick start.
+name: clearance
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: clearance
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-clearance}
+      POSTGRES_DB: clearance
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clearance -d clearance"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      args:
+        BAKE_MODELS: ${BAKE_MODELS:-false}
+    image: clearance-api:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      CLEARANCE_DATABASE_URL: postgresql+psycopg://clearance:${POSTGRES_PASSWORD:-clearance}@postgres:5432/clearance
+      CLEARANCE_LLM_PROVIDER: ${CLEARANCE_LLM_PROVIDER:-ollama}
+      # The compose service when the ollama profile runs; otherwise point it at an Ollama on the host:
+      # CLEARANCE_LLM_BASE_URL=http://host.docker.internal:11434
+      CLEARANCE_LLM_BASE_URL: ${CLEARANCE_LLM_BASE_URL:-http://ollama:11434}
+      CLEARANCE_LLM_MODEL: ${CLEARANCE_LLM_MODEL:-qwen3.5:4b}
+      CLEARANCE_DEV_IDP_ISSUER: http://localhost:${API_PORT:-8000}/dev-idp
+      CLEARANCE_CORS_ORIGINS: http://localhost:${WEB_PORT:-3000}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - models:/home/app/.cache/models
+      - devidp:/home/app/.cache/dev-idp
+    ports:
+      - "${API_PORT:-8000}:8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:${API_PORT:-8000}
+    image: clearance-web:latest
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    restart: unless-stopped
+
+  ollama:
+    profiles: [ollama]
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: 30m
+    restart: unless-stopped
+
+  ollama-pull:
+    profiles: [ollama]
+    image: ollama/ollama:latest
+    depends_on: [ollama]
+    environment:
+      OLLAMA_HOST: ollama:11434
+    entrypoint: ["/bin/sh", "-c", "sleep 3 && ollama pull ${CLEARANCE_LLM_MODEL:-qwen3.5:4b}"]
+    restart: "no"
+
+volumes:
+  pgdata:
+  models:
+  devidp:
+  ollama:
