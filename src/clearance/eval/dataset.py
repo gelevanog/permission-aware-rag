@@ -28,7 +28,8 @@ class Canary:
     match: tuple[str, ...]
 
     def found_in(self, text: str) -> bool:
-        return any(_contains(text, variant) for variant in self.match)
+        plain = normalize_spaces(text)
+        return any(_contains(plain, variant) for variant in self.match)
 
 
 def _contains(text: str, variant: str) -> bool:
@@ -55,8 +56,16 @@ class AuthorizedQuestion:
         return bool(self.docs)
 
     def expect_met(self, text: str) -> bool:
-        lowered = text.lower()
+        lowered = normalize_spaces(text).lower()
         return all(any(option.lower() in lowered for option in fact.split("|")) for fact in self.expect)
+
+
+_SPACES = re.compile(r"[\u00a0\u2007\u2009\u202f]")
+
+
+def normalize_spaces(text: str) -> str:
+    """Models often write "3\u202fyears" or "24\u00a0December": compare with plain spaces."""
+    return _SPACES.sub(" ", text)
 
 
 @dataclass(frozen=True)

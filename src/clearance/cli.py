@@ -344,6 +344,43 @@ def eval_quality(
         console.print(label, data["model"], data["summary"])
 
 
+@eval_app.command("quality-repair")
+def eval_quality_repair(
+    path: Annotated[Path, typer.Option()] = Path("results/quality.json"),
+    retry_model: Annotated[str | None, typer.Option(help="Free model for cloud rows that errored")] = None,
+) -> None:
+    """Fill the gaps of a quality run: re-judge answers whose verdict failed (timeouts, token limit) and re-ask
+    cloud questions whose generation errored (with a fallback free model). Summaries are recomputed."""
+    from clearance.config import DEFAULT_FREE_FALLBACKS, DEFAULT_JUDGE_FALLBACKS, DEFAULT_JUDGE_MODEL
+    from clearance.eval.judge import Judge
+    from clearance.eval.runner import prepare, repair_quality, write_json
+    from clearance.llm.factory import budgeted, build_chat_model
+
+    cloud = _cloud_settings(_settings())
+    judge = Judge(
+        budgeted(
+            build_chat_model(
+                cloud, provider="openrouter", model=DEFAULT_JUDGE_MODEL, fallback_models=DEFAULT_JUDGE_FALLBACKS
+            ),
+            cloud,
+            tag="judge",
+        )
+    )
+    retry = budgeted(
+        build_chat_model(
+            cloud, provider="openrouter", model=retry_model or DEFAULT_FREE_FALLBACKS[0], fallback_models=[]
+        ),
+        cloud,
+        tag="generate-retry",
+    )
+    data = json.loads(path.read_text(encoding="utf-8"))
+    ctx = prepare(cloud, model=_extractive())
+    result = repair_quality(ctx, data, judge, {"cloud": retry})
+    write_json(path, result)
+    for label, gen in result["generators"].items():
+        console.print(label, gen["summary"])
+
+
 @eval_app.command("local-models")
 def eval_local_models(
     models: Annotated[str, typer.Option(help="Comma-separated Ollama models to compare")] = "qwen3.5:4b,qwen3.5:latest",

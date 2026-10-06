@@ -54,8 +54,10 @@ def parse_verdict(text: str) -> dict[str, Any]:
 
 
 class Judge:
-    def __init__(self, model: ChatModel) -> None:
+    def __init__(self, model: ChatModel, *, max_tokens: int = 4000) -> None:
         self.model = model
+        self.max_tokens = max_tokens
+        """Reasoning models think before the JSON verdict; a small budget ends in an empty answer."""
 
     @property
     def label(self) -> str:
@@ -73,7 +75,9 @@ class Judge:
 
     def grade(self, question: AuthorizedQuestion, answer: str, context: Sequence[RetrievedChunk]) -> dict[str, Any]:
         try:
-            completion = self.model.complete(self.messages(question, answer, context), max_tokens=1500, temperature=0.0)
+            completion = self.model.complete(
+                self.messages(question, answer, context), max_tokens=self.max_tokens, temperature=0.0
+            )
         except LLMError as exc:
             return {"correct": None, "faithful": None, "reason": f"judge error: {str(exc)[:200]}"}
         verdict = parse_verdict(completion.text)

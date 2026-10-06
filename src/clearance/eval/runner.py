@@ -469,13 +469,75 @@ def run_quality(
     }
 
 
+def repair_quality(
+    ctx: EvalContext, data: dict[str, Any], judge: Judge, retry_models: dict[str, ChatModel]
+) -> dict[str, Any]:
+    """Re-ask rows that errored (with the given fallback model) and re-judge answered rows without a verdict."""
+    company = ctx.services.directory.company if ctx.services.directory else "the company"
+    questions = {q.id: q for q in ctx.questions.authorized}
+    for label, generator in data["generators"].items():
+        for index, row in enumerate(generator["rows"]):
+            question = questions[row["id"]]
+            if "error" in row and label in retry_models:
+                model = retry_models[label]
+                assistant = Assistant(
+                    settings=ctx.settings,
+                    db=ctx.services.db,
+                    embedder=ctx.services.embedder,
+                    model=model,
+                    cache=PermissionScopedCache(enabled=False),
+                    company=company,
+                )
+                try:
+                    answer = assistant.ask(ctx.identities[question.user], question.question)
+                except LLMError as exc:
+                    console.log(f"repair {label} {row['id']}: still failing: {exc}")
+                    continue
+                retrieved = [ctx.external_ids[r["document_id"]] for r in answer.trace.retrieved if r["in_context"]]
+                all_docs = [ctx.external_ids[r["document_id"]] for r in answer.trace.retrieved]
+                row = {
+                    "id": question.id,
+                    "user": question.user,
+                    "answerable": question.answerable,
+                    "gold_docs": list(question.docs),
+                    "outcome": answer.outcome,
+                    "answer": answer.text,
+                    "cited_docs": sorted({ctx.external_ids[c.document_id] for c in answer.citations}),
+                    "retrieved_docs": retrieved,
+                    "expect_met": None,
+                    "hit_at_k": hit_at_k(retrieved, question.docs, ctx.settings.top_k) if question.answerable else None,
+                    "reciprocal_rank": reciprocal_rank(all_docs, question.docs) if question.answerable else None,
+                    "timings_ms": {key: round(value) for key, value in answer.trace.timings_ms.items()},
+                    "fallback": answer.trace.fallback,
+                    "served_model": getattr(model, "last_served", None) or model.label,
+                    "repaired": f"original generation failed ({row['error'][:80]}); re-asked with {model.label}",
+                }
+                generator["rows"][index] = row
+            if "error" in row:
+                continue
+            if question.answerable:
+                row["expect_met"] = question.expect_met(row["answer"])
+            needs_verdict = question.answerable and row["outcome"] == "answered"
+            if needs_verdict and (row.get("judge") or {}).get("correct") is None:
+                vector = ctx.services.embedder.embed_query(question.question)
+                identity = ctx.identities[question.user]
+                context = ctx.context_of(ctx.retriever.search(vector, identity.principals, ctx.settings.top_k))
+                row["judge"] = judge.grade(question, row["answer"], context)
+                console.log(f"repair {label} {row['id']}: judge={row['judge'].get('correct')}")
+        generator["summary"] = summarize_quality(generator["rows"])
+    data["repaired"] = True
+    return data
+
+
 def summarize_quality(rows: list[dict[str, Any]]) -> dict[str, Any]:
     ok = [r for r in rows if "error" not in r]
     answerable = [r for r in ok if r["answerable"]]
     unanswerable = [r for r in ok if not r["answerable"]]
     judged = [r for r in answerable if "judge" in r and r["judge"].get("correct") is not None]
     answered = [r for r in answerable if r["outcome"] == "answered"]
+    refused = [r for r in answerable if r["outcome"] == "no_answer"]
     correct = sum(1 for r in judged if r["judge"]["correct"])
+    graded = len(judged) + len(refused)  # a refusal on an answerable question is graded as incorrect
     faithful_judged = [r for r in judged if r["judge"].get("faithful") is not None]
     generate_ms = [r["timings_ms"]["generate"] for r in ok if "generate" in r["timings_ms"]]
     return {
@@ -483,7 +545,8 @@ def summarize_quality(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "errors": len(rows) - len(ok),
         # Refusals count as incorrect: correctness is over all answerable questions, not only answered ones.
         "correct": correct if judged else None,
-        "correctness": rate(correct, len(answerable)) if judged else None,
+        "correctness": rate(correct, graded) if judged else None,
+        "graded": graded,
         "judged": len(judged),
         "faithfulness": rate(sum(1 for r in faithful_judged if r["judge"]["faithful"]), len(faithful_judged)),
         "expect_met": rate(sum(1 for r in answerable if r["expect_met"]), len(answerable)),
