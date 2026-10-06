@@ -226,7 +226,8 @@ class Assistant:
             yield {"type": "trace", "trace": answer.trace}
             yield {"type": "token", "text": answer.text}
             yield {"type": "done", "answer": answer}
-            self._audit(identity, question, answer, None, int((time.perf_counter() - total_started) * 1000))
+            vector = self._embed(question, principals)  # cached; the audit still records the excluded count
+            self._audit(identity, question, answer, vector, int((time.perf_counter() - total_started) * 1000))
             return
 
         context, trace, epoch, vector = self._prepare(identity, question, k)

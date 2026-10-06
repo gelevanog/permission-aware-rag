@@ -102,11 +102,16 @@ function SourceCard({ citation, expanded, onToggle }: { citation: Citation; expa
             {citation.path ? `${citation.path} / ` : ""}
             {citation.section || "Introduction"}
           </span>
-          <span className={cn("mt-1.5 block text-zinc-600", expanded ? "whitespace-pre-line" : "line-clamp-2")}>
-            {citation.snippet}
+          <span className={cn("mt-1.5 text-zinc-600", expanded ? "block whitespace-pre-line" : "line-clamp-2")}>
+            {plain(citation.snippet)}
           </span>
         </span>
       </span>
     </button>
   );
+}
+
+/** Snippets are raw Markdown: drop emphasis markers and list dashes for display. */
+function plain(text: string): string {
+  return text.replace(/\*\*|__|`/g, "").replace(/(^|\s)[-*] (?=\S)/g, "$1").replace(/\s+/g, " ").trim();
 }

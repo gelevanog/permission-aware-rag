@@ -48,7 +48,9 @@ function Chat({ user }: { user: DemoUser | null }) {
       .catch(() => setPrincipals([]));
   }, [user, tokenFor]);
 
-  useEffect(() => bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" }), [turns]);
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" }); // returns a Promise in recent browsers
+  }, [turns]);
 
   const update = (index: number, patch: Partial<Turn>) =>
     setTurns((current) => current.map((turn, i) => (i === index ? { ...turn, ...patch } : turn)));
