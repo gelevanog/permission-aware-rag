@@ -1,0 +1,2 @@
+inherit: true
+allow: [user:alice.chen@fernhill.test, group:hr]

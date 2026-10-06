@@ -1,0 +1,2 @@
+inherit: true
+allow: [user:bob.tanner@fernhill.test, user:erin.walsh@fernhill.test, group:finance]

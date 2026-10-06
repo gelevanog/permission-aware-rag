@@ -1,0 +1,42 @@
+# Identity-provider groups and source-system grantees -> Clearance principals.
+# See src/clearance/auth/mapping.py and README > "Plug in your identity provider".
+
+# Values of the token's `groups` claim (Okta group names, Keycloak, the dev IdP).
+# Groups not listed here are ignored (CLEARANCE_UNMAPPED_GROUPS=ignore), e.g. FH-Lisbon-Office below.
+idp_groups:
+  FH-All-Staff: group:all-employees
+  FH-Leadership: group:leadership
+  FH-People-Managers: group:managers
+  FH-Finance: group:finance
+  FH-People-Team: group:hr
+  FH-Engineering: group:engineering
+  FH-Sales: group:sales
+  FH-Legal: group:legal
+  FH-IT: group:it
+  FH-IT-Admins: group:it-admins
+  FH-Contractors: group:contractors
+
+# Microsoft Entra ID (Azure AD) group object ids: the `groups` claim of Entra tokens and SharePoint grants.
+# (Example ids for the demo tenant used by the SharePoint connector tests.)
+aad_group_ids:
+  3f2c6a1e-8b4d-4c7e-9a10-2b5e7d9c1f01: group:all-employees
+  9d41b7c2-5e3a-4f88-b2c6-7a1e0d3f4b02: group:finance
+  c7e9a2d4-1b6f-4e3a-8d5c-0f9b2a6e7c03: group:leadership
+  5a8d3f1b-9c2e-4b7a-a6d4-3e1f0c9b8d04: group:hr
+
+# Google Workspace groups as they appear in Drive permissions (type: group).
+group_emails:
+  all-staff@fernhill.test: group:all-employees
+  finance@fernhill.test: group:finance
+  leadership@fernhill.test: group:leadership
+  people@fernhill.test: group:hr
+  engineering@fernhill.test: group:engineering
+  sales@fernhill.test: group:sales
+  legal@fernhill.test: group:legal
+
+# Drive "domain" permissions and SharePoint "organization" sharing links.
+domains:
+  fernhill.test: group:all-employees
+
+# "Anyone with the link" grants. Unset = nobody (fail closed): such links are not treated as company-wide access.
+anyone: null

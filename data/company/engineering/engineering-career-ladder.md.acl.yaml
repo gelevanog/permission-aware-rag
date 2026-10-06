@@ -1,0 +1,5 @@
+inherit: true
+deny: [group:contractors]
+sections:
+  - heading: "Salary bands"
+    allow: [group:hr, group:managers]

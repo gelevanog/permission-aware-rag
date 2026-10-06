@@ -6,6 +6,7 @@ Both run on the machine that runs Clearance; no text is sent anywhere to be embe
 from __future__ import annotations
 
 import hashlib
+import itertools
 import re
 import threading
 from collections.abc import Sequence
@@ -96,7 +97,7 @@ class HashEmbedder:
 
     def _vector(self, text: str) -> list[float]:
         tokens = [token for token in _TOKEN.findall(text.lower()) if token not in _STOP]
-        features = tokens + [f"{a} {b}" for a, b in zip(tokens, tokens[1:], strict=False)]
+        features = tokens + [f"{a} {b}" for a, b in itertools.pairwise(tokens)]
         vector = np.zeros(self._dim, dtype=np.float64)
         for feature in features:
             digest = hashlib.blake2b(feature.encode("utf-8"), digest_size=8).digest()

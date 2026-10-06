@@ -62,7 +62,9 @@ def upgrade() -> None:
         CREATE OR REPLACE FUNCTION clearance_principals() RETURNS text[]
         LANGUAGE sql STABLE PARALLEL SAFE AS $$
             SELECT COALESCE(
-                ARRAY(SELECT jsonb_array_elements_text(NULLIF(current_setting('clearance.principals', true), '')::jsonb)),
+                ARRAY(SELECT jsonb_array_elements_text(
+                    NULLIF(current_setting('clearance.principals', true), '')::jsonb
+                )),
                 ARRAY[]::text[]
             )
         $$

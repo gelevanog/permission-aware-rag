@@ -1,0 +1,2 @@
+inherit: true
+allow: [user:kofi.mensah@fernhill.test, user:hana.sato@fernhill.test]

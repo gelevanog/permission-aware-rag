@@ -1,0 +1,4 @@
+inherit: true
+sections:
+  - heading: "Floor prices and approval thresholds"
+    allow: [user:julia.romero@fernhill.test, group:finance, group:leadership]

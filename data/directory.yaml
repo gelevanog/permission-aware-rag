@@ -1,0 +1,86 @@
+# The demo company's people as its identity provider would describe them. The dev IdP signs tokens whose
+# `groups` claim carries `idp_groups` verbatim; configs/group-mapping.yaml turns them into Clearance principals.
+# Written for this demo; every person and fact is fictional.
+company: Fernhill Labs
+domain: fernhill.test
+
+groups:
+  - {name: all-employees, idp_group: FH-All-Staff, description: Every employee (not contractors)}
+  - {name: leadership, idp_group: FH-Leadership, description: CEO, CFO, VP Engineering, General Counsel}
+  - {name: managers, idp_group: FH-People-Managers, description: Everyone with direct reports}
+  - {name: finance, idp_group: FH-Finance, description: Finance team}
+  - {name: hr, idp_group: FH-People-Team, description: People (HR) team}
+  - {name: engineering, idp_group: FH-Engineering, description: Engineering, including embedded contractors}
+  - {name: sales, idp_group: FH-Sales, description: Sales team}
+  - {name: legal, idp_group: FH-Legal, description: Legal}
+  - {name: it, idp_group: FH-IT, description: IT}
+  - {name: it-admins, idp_group: FH-IT-Admins, description: Clearance administrators (manage ACLs, read the audit log)}
+  - {name: contractors, idp_group: FH-Contractors, description: External contractors}
+
+users:
+  - email: hana.sato@fernhill.test
+    name: Hana Sato
+    title: Chief Executive Officer
+    department: Leadership
+    idp_groups: [FH-All-Staff, FH-Leadership, FH-People-Managers, FH-Lisbon-Office]
+    persona: CEO; sees leadership material but not HR case files or legal-only documents
+  - email: kofi.mensah@fernhill.test
+    name: Kofi Mensah
+    title: Chief Financial Officer
+    department: Finance
+    idp_groups: [FH-All-Staff, FH-Leadership, FH-People-Managers, FH-Finance, FH-Lisbon-Office]
+    persona: CFO
+  - email: alice.chen@fernhill.test
+    name: Alice Chen
+    title: Financial Analyst
+    department: Finance
+    idp_groups: [FH-All-Staff, FH-Finance, FH-Lisbon-Office]
+    persona: Finance analyst; can read finance but not leadership or HR material
+  - email: carol.diaz@fernhill.test
+    name: Carol Diaz
+    title: Head of People
+    department: HR
+    idp_groups: [FH-All-Staff, FH-People-Team, FH-People-Managers, FH-Austin-Office]
+    persona: HR lead; sees compensation and HR cases
+  - email: dan.kim@fernhill.test
+    name: Dan Kim
+    title: Senior Software Engineer
+    department: Engineering
+    idp_groups: [FH-All-Staff, FH-Engineering, FH-Lisbon-Office]
+    persona: Engineer; sees engineering docs but not salary bands
+  - email: erin.walsh@fernhill.test
+    name: Erin Walsh
+    title: VP Engineering
+    department: Engineering
+    idp_groups: [FH-All-Staff, FH-Engineering, FH-Leadership, FH-People-Managers, FH-Austin-Office]
+    persona: VP Engineering; leadership member who is explicitly denied the reorg plan about her org
+  - email: frank.moreau@fernhill.test
+    name: Frank Moreau
+    title: Account Executive
+    department: Sales
+    idp_groups: [FH-All-Staff, FH-Sales, FH-Austin-Office]
+    persona: Sales rep; no floor prices
+  - email: julia.romero@fernhill.test
+    name: Julia Romero
+    title: Sales Manager
+    department: Sales
+    idp_groups: [FH-All-Staff, FH-Sales, FH-People-Managers, FH-Austin-Office]
+    persona: Sales manager; floor prices shared with her personally
+  - email: grace.liu@fernhill.test
+    name: Grace Liu
+    title: General Counsel
+    department: Legal
+    idp_groups: [FH-All-Staff, FH-Legal, FH-Leadership, FH-Lisbon-Office]
+    persona: General Counsel
+  - email: bob.tanner@fernhill.test
+    name: Bob Tanner
+    title: Backend Contractor
+    department: Engineering (contractor)
+    idp_groups: [FH-Contractors, FH-Engineering]
+    persona: Contractor in the engineering group; deny rules keep him out of sensitive engineering docs
+  - email: ian.brooks@fernhill.test
+    name: Ian Brooks
+    title: IT Administrator
+    department: IT
+    idp_groups: [FH-All-Staff, FH-IT, FH-IT-Admins, FH-Lisbon-Office]
+    persona: Clearance admin; manages ACLs and reads the audit log, but gets no read-everything bypass

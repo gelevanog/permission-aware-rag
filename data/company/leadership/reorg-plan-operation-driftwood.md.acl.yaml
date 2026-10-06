@@ -1,0 +1,3 @@
+inherit: true
+allow: [user:carol.diaz@fernhill.test]
+deny: [user:erin.walsh@fernhill.test]

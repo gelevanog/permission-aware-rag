@@ -1,0 +1,2 @@
+inherit: true
+deny: [group:contractors]
