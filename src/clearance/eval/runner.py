@@ -4,6 +4,7 @@ latency. Each writes a JSON file under results/ (see README > Results)."""
 from __future__ import annotations
 
 import json
+import os
 import platform
 import time
 import uuid
@@ -51,6 +52,10 @@ SearchFn = Callable[[Sequence[float], Sequence[str], int], list[RetrievedChunk]]
 # Setup: a dedicated evaluation database with a fresh copy of the corpus
 # ---------------------------------------------------------------------------------------------------------
 def eval_database_url(settings: Settings) -> str:
+    """The database evaluation runs reset and fill: <db>_eval, or $CLEARANCE_EVAL_DATABASE_URL."""
+    override = os.environ.get("CLEARANCE_EVAL_DATABASE_URL")
+    if override:
+        return override
     url = make_url(settings.database_url)
     return url.set(database=f"{url.database}_eval").render_as_string(hide_password=False)
 
