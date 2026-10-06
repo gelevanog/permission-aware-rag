@@ -113,9 +113,9 @@ def create_app(services: Services | None = None, settings: Settings | None = Non
             raise HTTPException(403, "administrators only")
         return user
 
-    Svc = Annotated[Services, Depends(svc)]
-    User = Annotated[Identity, Depends(identity)]
-    Admin = Annotated[Identity, Depends(admin)]
+    Svc = Annotated[Services, Depends(svc)]  # noqa: N806
+    User = Annotated[Identity, Depends(identity)]  # noqa: N806
+    Admin = Annotated[Identity, Depends(admin)]  # noqa: N806
 
     # ---- health ---------------------------------------------------------------------------------------
     @app.get("/health")

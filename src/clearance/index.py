@@ -73,7 +73,7 @@ class AclUpdateResult:
 
 
 @dataclass
-class IngestReport:
+class IndexReport:
     results: list[UpsertResult] = field(default_factory=list)
     deleted: int = 0
     errors: list[str] = field(default_factory=list)
@@ -109,8 +109,9 @@ class IndexWriter:
                 select(Document).where(Document.source == doc.source, Document.external_id == doc.external_id)
             )
             if existing is not None and existing.content_hash == doc.content_hash:
-                changed_meta = (existing.title, existing.path, existing.owner) != (title, doc.path, doc.owner)
-                existing.title, existing.path, existing.owner = title, doc.path, doc.owner
+                path = doc.path or existing.path  # incremental feeds may not know the folder path
+                changed_meta = (existing.title, existing.path, existing.owner) != (title, path, doc.owner)
+                existing.title, existing.path, existing.owner = title, path, doc.owner
                 if DocumentAcl.from_json(existing.acl) != doc.acl:
                     count = self._write_acl(session, existing, doc.acl)
                     return UpsertResult("acl_updated", existing.id, count)
@@ -129,7 +130,7 @@ class IndexWriter:
                 session.execute(delete(Chunk).where(Chunk.document_id == document.id))
                 action = "content_updated"
             document.title = title
-            document.path = doc.path
+            document.path = doc.path or (existing.path if existing is not None else "")
             document.mime_type = doc.mime_type or "text/markdown"
             document.owner = doc.owner
             document.source_url = doc.source_url
@@ -225,9 +226,9 @@ class IndexWriter:
             return set(session.scalars(select(Document.external_id).where(Document.source == source)))
 
     # ---- batch -----------------------------------------------------------------------------------------
-    def sync_full(self, source: str, documents: list[SourceDocument], *, prune: bool = True) -> IngestReport:
+    def sync_full(self, source: str, documents: list[SourceDocument], *, prune: bool = True) -> IndexReport:
         """Upsert every document of a source; with ``prune``, delete the ones the source no longer has."""
-        report = IngestReport()
+        report = IndexReport()
         seen: set[str] = set()
         for doc in documents:
             seen.add(doc.external_id)

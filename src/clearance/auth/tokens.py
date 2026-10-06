@@ -139,7 +139,7 @@ class TokenVerifier:
         groups = tuple(str(group) for group in raw_groups)
         mapped, unmapped = self.mapping.principals_for_claims(groups)
         if unmapped:
-            log.info("auth.unmapped_groups", count=len(unmapped))
+            log.debug("auth.unmapped_groups", count=len(unmapped))
         try:
             principals = normalize_principals([f"user:{email}", *mapped])
         except AclError as exc:

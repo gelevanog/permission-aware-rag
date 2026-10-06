@@ -85,6 +85,7 @@ class RetrievedChunk:
     text: str
     score: float
     source_url: str | None = None
+    section_path: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -109,6 +110,7 @@ def _row_to_chunk(row: Sequence[object]) -> RetrievedChunk:
         section=" > ".join(str(part) for part in section_path),
         text=str(row[6]),
         score=float(row[7]),  # type: ignore[arg-type]
+        section_path=tuple(str(part) for part in section_path),
     )
 
 

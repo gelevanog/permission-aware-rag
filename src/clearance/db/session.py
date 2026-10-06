@@ -27,6 +27,8 @@ class Database:
         self.url = url
         self.reader_role = reader_role
         self.iterative_scan = iterative_scan
+        self.force_index_scan = False
+        """Benchmarks only: disable sequential scans so the planner must use the HNSW index."""
         self.engine: Engine = create_engine(url, pool_pre_ping=True, pool_size=10, max_overflow=10)
         self._sessions = sessionmaker(self.engine, expire_on_commit=False)
 
@@ -68,6 +70,8 @@ class Database:
                 connection.execute(
                     text("SELECT set_config('hnsw.iterative_scan', :mode, true)"), {"mode": self.iterative_scan}
                 )
+            if self.force_index_scan:
+                connection.execute(text("SET LOCAL enable_seqscan = off"))
             try:
                 yield connection
             finally:

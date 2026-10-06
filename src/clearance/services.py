@@ -10,12 +10,12 @@ from clearance.assistant import Assistant
 from clearance.audit import AuditLog
 from clearance.auth.devidp import DevIdentityProvider, Directory
 from clearance.auth.mapping import GroupMapping
-from clearance.auth.tokens import RemoteJwks, StaticKeys, TokenVerifier, discover_jwks_url
+from clearance.auth.tokens import KeySource, RemoteJwks, StaticKeys, TokenVerifier, discover_jwks_url
 from clearance.config import Settings
 from clearance.connectors.local import iter_folder
 from clearance.db.session import Database
 from clearance.embeddings import Embedder, build_embedder
-from clearance.index import IndexWriter, IngestReport
+from clearance.index import IndexReport, IndexWriter
 from clearance.llm.base import ChatModel
 from clearance.llm.factory import build_chat_model
 from clearance.retrieval.cache import PermissionScopedCache
@@ -54,6 +54,7 @@ class Services:
     @cached_property
     def verifier(self) -> TokenVerifier:
         settings = self.settings
+        keys: KeySource
         if settings.auth_mode == "dev":
             if self.dev_idp is None:
                 raise RuntimeError(
@@ -104,7 +105,7 @@ class Services:
             company=self.directory.company if self.directory else "the company",
         )
 
-    def seed_if_empty(self) -> IngestReport | None:
+    def seed_if_empty(self) -> IndexReport | None:
         """Index the demo corpus when the database has no documents yet."""
         if self.assistant.retriever.total_documents() > 0 or not self.settings.corpus_dir.exists():
             return None

@@ -112,6 +112,7 @@ class GoogleDriveConnector:
     def fetch(self, item: dict[str, Any], path: str = "") -> SourceDocument | None:
         acl = self.acl_for(item["id"])
         mime = str(item.get("mimeType") or "")
+        content_type: str | None
         if mime == GOOGLE_DOC:
             content = self._get(f"/files/{item['id']}/export", {"mimeType": "text/markdown"}).content
             filename, content_type = f"{item['name']}.md", "text/markdown"

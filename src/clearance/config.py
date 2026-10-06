@@ -87,6 +87,19 @@ class Settings(BaseSettings):
     )
     openai_base_url: str = Field(default="https://api.openai.com/v1", validation_alias=AliasChoices("OPENAI_BASE_URL"))
 
+    # ---- connectors (only needed for `clearance sync gdrive|sharepoint`)
+    gdrive_folder_id: str = ""
+    gdrive_service_account_file: Path | None = None
+    gdrive_subject: str = ""
+    """Workspace user to impersonate (domain-wide delegation); empty = the service account itself."""
+    sharepoint_tenant_id: str = ""
+    sharepoint_client_id: str = ""
+    sharepoint_client_secret: str | None = None
+    sharepoint_site_id: str = ""
+    sharepoint_drive_id: str = ""
+    sharepoint_organization_domain: str = ""
+    """Domain whose principal (see group mapping `domains`) an organization-wide sharing link grants."""
+
     # ---- budget for real cloud calls (evaluation, judge)
     llm_cache_dir: Path = Path(".cache/llm")
     llm_ledger: Path | None = Path("results/calls.jsonl")
