@@ -11,7 +11,7 @@
 ![mypy strict](https://img.shields.io/badge/mypy-strict-2a6db2)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
-https://github.com/user-attachments/assets/73140b21-c65b-4399-8389-e554e5115aad
+https://github.com/user-attachments/assets/61d611a9-e6c8-4ab5-acd3-394dc1ad281e
 
 <sub>62-second walkthrough with voiceover. Can't play it? [Download the MP4](docs/demo.mp4).</sub>
 
