@@ -246,6 +246,63 @@ def serve(
     uvicorn.run("clearance.api.app:create_default_app", factory=True, host=host, port=port, reload=reload)
 
 
+@app.command("mcp")
+def mcp_command(
+    user: Annotated[
+        str | None,
+        typer.Option(
+            "--user",
+            envvar="CLEARANCE_MCP_USER",
+            help="stdio: the demo user every search runs as (dev IdP), e.g. dan.kim",
+        ),
+    ] = None,
+    http: Annotated[
+        bool, typer.Option("--http", help="Serve Streamable HTTP; each request's bearer token picks the user")
+    ] = False,
+    host: Annotated[str, typer.Option(help="HTTP only")] = "127.0.0.1",
+    port: Annotated[int, typer.Option(help="HTTP only")] = 8765,
+) -> None:
+    """MCP server for Claude Desktop / Claude Code: permission-filtered search as one fixed user.
+
+    The user is bound here (--user, CLEARANCE_MCP_USER, or an ID token in CLEARANCE_MCP_TOKEN), never by a tool
+    argument. With --http there is no fixed user: every request must send Authorization: Bearer <ID token>.
+    """
+    from clearance.mcp_server import auth_settings, create_mcp_server, dev_user_identity, token_identity
+
+    settings = _settings()
+    services = _services(settings, model=_extractive(), migrate=False)  # no generation: Claude writes answers
+    token = os.environ.get("CLEARANCE_MCP_TOKEN", "").strip()
+    try:
+        if http:
+            if user or token:
+                raise ValueError(
+                    "--http takes the user from each request's bearer token; "
+                    "unset --user / CLEARANCE_MCP_USER / CLEARANCE_MCP_TOKEN"
+                )
+            server = create_mcp_server(
+                services,
+                identity=None,
+                identity_label="the user named by each request's bearer token",
+                auth=auth_settings(services, host=host, port=port),
+            )
+        else:
+            if bool(user) == bool(token):
+                raise ValueError("set exactly one of --user / CLEARANCE_MCP_USER (demo) or CLEARANCE_MCP_TOKEN")
+            identity = dev_user_identity(services, user) if user else token_identity(services, token)
+            who = identity()
+            label = f"{who.name} <{who.email}>, bound at server start ({'demo user' if user else 'ID token'})"
+            server = create_mcp_server(services, identity=identity, identity_label=label)
+        documents = services.assistant.retriever.total_documents()
+    except Exception as exc:  # stdout is the protocol channel: explain on stderr and exit
+        err.print(f"[red]clearance mcp:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    err.print(f"clearance mcp: {documents} documents indexed, serving over {'HTTP' if http else 'stdio'}")
+    if http:
+        server.run(transport="streamable-http", host=host, port=port)
+    else:
+        server.run()
+
+
 # ---- evaluation -----------------------------------------------------------------------------------------
 def _cloud_settings(settings: Settings) -> Settings:
     # The evaluation's cloud calls are explicit: local-only is lifted for this process only, the free-only guard stays.

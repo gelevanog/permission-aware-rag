@@ -28,6 +28,28 @@ def test_cli_help_and_users() -> None:
     assert "group:contractors" in result.output
 
 
+@pytest.mark.parametrize(
+    ("args", "message"),
+    [
+        (["mcp"], "exactly one"),
+        (["mcp", "--http", "--user", "dan.kim"], "bearer token"),
+        (["mcp", "--user", "mallory@evil.test"], "unknown demo user"),
+    ],
+)
+def test_cli_mcp_refuses_an_unbound_or_ambiguous_identity(tmp_path: Path, args: list[str], message: str) -> None:
+    env = {
+        "CLEARANCE_EMBEDDING_PROVIDER": "hash",
+        "CLEARANCE_DEV_IDP_KEY_FILE": str(tmp_path / "dev-idp.pem"),
+        "CLEARANCE_DIRECTORY_FILE": str(ROOT / "data" / "directory.yaml"),
+        "CLEARANCE_GROUP_MAPPING_FILE": str(ROOT / "configs" / "group-mapping.yaml"),
+        "CLEARANCE_MCP_USER": "",
+        "CLEARANCE_MCP_TOKEN": "",
+        "COLUMNS": "250",
+    }
+    result = runner.invoke(app, args, env=env)
+    assert result.exit_code == 2 and message in " ".join(result.output.split())
+
+
 def test_question_set_and_canaries_are_consistent() -> None:
     questions = load_questions(ROOT / "data" / "eval" / "questions.yaml")
     canaries = load_canaries(ROOT / "data" / "eval" / "canaries.yaml")

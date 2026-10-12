@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install db db-stop migrate seed serve web test lint format web-install web-lint web-build eval eval-offline eval-real free-models docker-up docker-up-ollama docker-build clean
+.PHONY: help install db db-stop migrate seed serve mcp web test lint format web-install web-lint web-build eval eval-offline eval-real free-models docker-up docker-up-ollama docker-build clean
 
 DB_URL ?= postgresql+psycopg://clearance:clearance@127.0.0.1:55432/clearance
 export CLEARANCE_DATABASE_URL ?= $(DB_URL)
@@ -29,6 +29,9 @@ seed:  ## Index the demo company corpus (data/company) with local embeddings
 
 serve:  ## API + dev IdP on http://localhost:8000 (seeds the demo corpus on first start)
 	uv run clearance serve --port 8000
+
+mcp:  ## MCP server over stdio as one demo user, for Claude Desktop / Claude Code (MCP_USER=dan.kim)
+	uv run clearance mcp --user $(or $(MCP_USER),dan.kim)
 
 web:  ## Next.js dev server on http://localhost:3000
 	cd web && npm run dev
