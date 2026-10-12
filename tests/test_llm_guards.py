@@ -167,6 +167,15 @@ def test_gateway_requests_and_served_model_check() -> None:
         _gateway(handler, require_free=True).complete(MESSAGES, max_tokens=10)
 
 
+def test_an_exhausted_budget_is_not_retried() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(429, json={"error": {"type": "budget_exhausted", "message": "project budget spent"}})
+
+    with pytest.raises(LLMError, match="budget exhausted") as info:
+        _gateway(handler, require_free=False).complete(MESSAGES, max_tokens=10)
+    assert not isinstance(info.value, RetryableLLMError)
+
+
 def test_gateway_calls_are_metered(tmp_path: Path) -> None:
     settings = make_settings(
         local_only=False, gateway_base_url=GATEWAY, gateway_api_key="k", llm_ledger=tmp_path / "calls.jsonl"

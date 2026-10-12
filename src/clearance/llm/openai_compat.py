@@ -13,6 +13,7 @@ from clearance.llm.base import Completion, LLMError, LLMUnavailableError, Messag
 from clearance.llm.guards import GATEWAY_FREE_HINT, OPENROUTER_FREE_HINT, ensure_free_models, ensure_served_free
 
 Kind = Literal["openai_compatible", "openrouter", "gateway", "openai"]
+_NOT_RETRYABLE_429 = frozenset({"budget_exhausted", "insufficient_quota"})
 _API_KEY_ENV = {"openrouter": "OPENROUTER_API_KEY", "gateway": "CLEARANCE_GATEWAY_API_KEY", "openai": "OPENAI_API_KEY"}
 
 OPENROUTER_HEADERS = {
@@ -166,6 +167,8 @@ def _json_or_error(response: httpx.Response) -> dict[str, Any]:
     if status < 400:
         return data
     message = _error_message(data)
+    if status == 429 and isinstance(error, dict) and error.get("type") in _NOT_RETRYABLE_429:
+        raise LLMError(f"budget exhausted: {message}")  # a spending cap, not a rate limit: retrying cannot help
     if status == 429:
         retry_after = response.headers.get("retry-after")
         try:
