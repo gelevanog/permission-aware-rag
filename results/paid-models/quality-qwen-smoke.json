@@ -1,0 +1,168 @@
+{
+ "date": "2026-10-12",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "judge": "gateway/claude-opus-5-5",
+ "questions": 4,
+ "retrieval": {
+  "questions": 3,
+  "recall_at_k": 1.0,
+  "mrr": 0.733
+ },
+ "generators": {
+  "cloud": {
+   "model": "gateway/qwen3.7-plus",
+   "summary": {
+    "answerable": 3,
+    "errors": 1,
+    "correct": 2,
+    "correctness": 0.6667,
+    "graded": 3,
+    "judged": 2,
+    "faithfulness": 1.0,
+    "expect_met": 0.6667,
+    "false_refusals": 1,
+    "answered_with_citation": 1.0,
+    "cited_a_gold_doc": 1.0,
+    "unanswerable": 0,
+    "unanswerable_declined": 0,
+    "generate_ms": {
+     "n": 3,
+     "p50": 0.0,
+     "p95": 1842.3,
+     "mean": 682.3,
+     "max": 2047
+    },
+    "fallbacks": 0
+   },
+   "rows": [
+    {
+     "id": "q11",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/compensation-philosophy.md"
+     ],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/benefits-overview.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/compensation-philosophy.md"
+     ],
+     "expect_met": false,
+     "hit_at_k": true,
+     "reciprocal_rank": 0.2,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2047,
+      "total": 2063
+     },
+     "wall_ms": 2063,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q21",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "outcome": "answered",
+     "answer": "New API list endpoints must use cursor pagination [1]. Offset pagination should not be used for new endpoints [1].",
+     "cited_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "retrieved_docs": [
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/architecture-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 0,
+      "total": 18
+     },
+     "wall_ms": 18,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key facts, cursor pagination and no offset pagination, both supported by passage [1], though it omits the default limit of 50 and the maximum of 200.",
+      "judge_model": "claude-opus-5-5"
+     },
+     "judge_original": {
+      "correct": null,
+      "faithful": null,
+      "reason": "judge error: upstream 400: `temperature` is deprecated for this model."
+     }
+    },
+    {
+     "id": "q46",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your hourly rate is $95 per hour [1].",
+     "cited_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "retrieved_docs": [
+      "shared/bob-tanner-statement-of-work.md",
+      "contractors/contractor-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "engineering/api-design-guidelines.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 7,
+      "generate": 0,
+      "total": 17
+     },
+     "wall_ms": 17,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $95 per hour rate, which passage [1] supports, and the 30-hour weekly cap it omits is supplementary to a question that asked only for the rate.",
+      "judge_model": "claude-opus-5-5"
+     },
+     "judge_original": {
+      "correct": null,
+      "faithful": null,
+      "reason": "judge error: upstream 400: `temperature` is deprecated for this model."
+     }
+    },
+    {
+     "id": "q53",
+     "error": "budget exhausted: qwen token budget exhausted (project 2029/3000, global 12321/42000)"
+    }
+   ]
+  }
+ },
+ "judge_original": "gateway/claude-opus-5-5"
+}

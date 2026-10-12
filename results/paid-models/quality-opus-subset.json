@@ -1,0 +1,755 @@
+{
+ "date": "2026-10-12",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "judge": "gateway/claude-opus-5-5",
+ "questions": 20,
+ "retrieval": {
+  "questions": 15,
+  "recall_at_k": 1.0,
+  "mrr": 0.947
+ },
+ "generators": {
+  "cloud": {
+   "model": "gateway/claude-opus-5-5",
+   "summary": {
+    "answerable": 15,
+    "errors": 0,
+    "correct": 13,
+    "correctness": 0.8667,
+    "graded": 15,
+    "judged": 14,
+    "faithfulness": 1.0,
+    "expect_met": 0.8667,
+    "false_refusals": 1,
+    "answered_with_citation": 1.0,
+    "cited_a_gold_doc": 1.0,
+    "unanswerable": 5,
+    "unanswerable_declined": 5,
+    "generate_ms": {
+     "n": 20,
+     "p50": 2823.5,
+     "p95": 3953.2,
+     "mean": 2846.1,
+     "max": 4773
+    },
+    "fallbacks": 0
+   },
+   "rows": [
+    {
+     "id": "q01",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/employee-handbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "Full-time employees receive 25 days of paid time off per year, plus the public holidays of the office location in their contract [1]. Up to 5 unused days can be carried over into the first quarter of the following year, and anything beyond that expires on 31 March [1].",
+     "cited_docs": [
+      "all-hands/employee-handbook.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/employee-handbook.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 5,
+      "generate": 2109,
+      "total": 2124
+     },
+     "wall_ms": 2124,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states 25 days plus office-location public holidays, matching the gold answer, and the carry-over detail is taken directly from passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q02",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The per diem for meals and incidentals in Portugal is **€55 per day** [1]. On the first and last day of a trip, you receive 75% of that rate, and you should not claim meals already provided by a conference or customer [1]. Per diem is claimed through Ramp at the end of the trip [1].",
+     "cited_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/travel-policy.md",
+      "all-hands/travel-policy.md",
+      "all-hands/expense-policy.md",
+      "all-hands/travel-policy.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 5,
+      "generate": 2835,
+      "total": 2854
+     },
+     "wall_ms": 2854,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the €55 daily rate and the 75% rule for first and last days, and every claim is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q05",
+     "user": "julia.romero@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/expense-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The one-time home-office stipend is **$500** (or **€460** in Portugal), available to employees who work from home at least part of the week [1]. It covers items such as a desk, chair or monitor, while IT provides the laptop and core peripherals separately [1][2].",
+     "cited_docs": [
+      "all-hands/expense-policy.md",
+      "all-hands/remote-work-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/expense-policy.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/learning-and-development.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2812,
+      "total": 2827
+     },
+     "wall_ms": 2827,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $500 (€460 in Portugal) one-time amount and its use for a desk, chair or monitor, all supported by passages [1] and [2].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q07",
+     "user": "grace.liu@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/parental-leave-policy.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "outcome": "answered",
+     "answer": "Primary caregivers get **16 weeks** of parental leave at 100% of base salary [1][3]. It must be taken in one continuous block within the first 12 months after the child arrives [1]. Where statutory leave is more generous, such as in Portugal, the statutory entitlement applies and Fernhill tops up pay to 100% [1].",
+     "cited_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/parental-leave-policy.md",
+      "all-hands/parental-leave-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/parental-leave-policy.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 3350,
+      "total": 3364
+     },
+     "wall_ms": 3364,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives 16 weeks at full pay for primary caregivers, and every other claim (continuous block, 12-month window, Portugal top-up) is supported by passages [1] and [3].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q10",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/product-overview-routeiq.md"
+     ],
+     "outcome": "answered",
+     "answer": "The Growth tier's public list price is **$79 per seat per month**, billed annually [1]. It includes all modules, multi-depot support, API access, and chat support [1]. Seats are counted per planner or analyst, and driver app users are free [1].",
+     "cited_docs": [
+      "all-hands/product-overview-routeiq.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/product-overview-routeiq.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "engineering/tech-debt-roadmap-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2746,
+      "total": 2765
+     },
+     "wall_ms": 2765,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives $79 per seat per month billed annually, matching the gold answer, and every added detail (modules, multi-depot, API, chat support, per planner/analyst seat, free driver users) comes from passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q11",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/compensation-philosophy.md"
+     ],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/benefits-overview.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/compensation-philosophy.md"
+     ],
+     "expect_met": false,
+     "hit_at_k": true,
+     "reciprocal_rank": 0.2,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 7,
+      "generate": 1915,
+      "total": 1934
+     },
+     "wall_ms": 1934,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    },
+    {
+     "id": "q14",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/ceo-priorities-2027.md"
+     ],
+     "outcome": "answered",
+     "answer": "The passages mention three company priorities for 2027 [3], but only two appear here:\n\n1. **Enterprise expansion:** Make RouteIQ the obvious choice for fleets of 500+ vehicles by completing SOC 2 Type II, shipping role-based permissions and audit logs, offering a contractual uptime SLA, and building enterprise sales and customer success out of Austin and Lisbon [1].\n2. **A credible path to profitability:** Hold headcount growth below revenue growth, improve gross margin through infrastructure efficiency, and review every recurring vendor contract [4].\n\nThe third priority isn't described in the passages provided.",
+     "cited_docs": [
+      "all-hands/ceo-priorities-2027.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "finance/budget-2027-draft.md"
+     ],
+     "expect_met": false,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 11,
+      "generate": 3910,
+      "total": 3933
+     },
+     "wall_ms": 3933,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": false,
+      "faithful": true,
+      "reason": "The answer correctly gives enterprise expansion and a path to profitability from the passages, and accurately says the third is not described there, but it misses platform reliability.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q21",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "outcome": "answered",
+     "answer": "New list endpoints must use **cursor pagination**, not offset pagination [1]. Responses include `data` and `next_cursor`, which is `null` on the last page. The default `limit` is 50 and the maximum is 200 [1].",
+     "cited_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "retrieved_docs": [
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/architecture-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 8,
+      "generate": 2637,
+      "total": 2657
+     },
+     "wall_ms": 2657,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives cursor pagination with no offset, default limit 50 and max 200, matching the gold answer, and every claim is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q32",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/compensation-review-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The 2026 merit budget was **3.8% of total base payroll**, with a separate 1.2% promotion pool [1]. It was set slightly above the Pave market movement for the peer group (3.4% US, 3.1% Portugal) because of elevated engineering attrition in late 2025 [1]. Increases took effect on 1 April 2026 and were paid in the April payroll [1].",
+     "cited_docs": [
+      "hr/compensation-review-2026.md"
+     ],
+     "retrieved_docs": [
+      "hr/compensation-review-2026.md",
+      "hr/compensation-review-2026.md",
+      "all-hands/compensation-philosophy.md",
+      "hr/manager-guide-performance-reviews.md",
+      "hr/compensation-review-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 3153,
+      "total": 3172
+     },
+     "wall_ms": 3172,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states the 3.8% merit budget and 1.2% promotion pool, and every other claim is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q33",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/headcount-plan-2027.md"
+     ],
+     "outcome": "answered",
+     "answer": "Requisition HC-2027-114 is for a **Head of Data**, reporting to the VP Engineering and based in Lisbon [1]. The role will own the data platform, the analytics behind Fleet Insights and Carbon Reporting, and internal BI [1]. It is the most senior new hire in the plan and is expected to open in January 2027 with a retained search firm [1].",
+     "cited_docs": [
+      "hr/headcount-plan-2027.md"
+     ],
+     "retrieved_docs": [
+      "hr/headcount-plan-2027.md",
+      "hr/headcount-plan-2027.md",
+      "hr/headcount-plan-2027.md",
+      "hr/employee-relations-case-log.md",
+      "hr/headcount-plan-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 15,
+      "generate": 3531,
+      "total": 3558
+     },
+     "wall_ms": 3558,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives Head of Data, reporting to the VP Engineering, based in Lisbon, and every added detail comes straight from passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q35",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/hr-team-handbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "We use **Checkr** for background checks in the US [3]. HR uses Checkr's \"Standard\" package, which covers identity, criminal history for 7 years, and employment verification for the last two roles [1]. Offers are conditional on a satisfactory Checkr check [2].",
+     "cited_docs": [
+      "hr/hr-team-handbook.md",
+      "shared/frank-moreau-offer-letter.md"
+     ],
+     "retrieved_docs": [
+      "hr/hr-team-handbook.md",
+      "shared/frank-moreau-offer-letter.md",
+      "hr/hr-team-handbook.md",
+      "legal/data-processing-overview.md",
+      "legal/data-processing-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 15,
+      "generate": 3485,
+      "total": 3512
+     },
+     "wall_ms": 3512,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer names Checkr with the Standard package, matching the gold answer, and every claim is supported by passages [1], [2] and [3].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q37",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The annual quota for a fully ramped Account Executive is **$720,000** in new annual contract value (ACV), measured quarterly at 25% per quarter [1]. New AEs ramp up to full quota from month 6 [1].",
+     "cited_docs": [
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "retrieved_docs": [
+      "sales/sales-compensation-plan-2026.md",
+      "shared/frank-moreau-offer-letter.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/expense-policy.md",
+      "shared/frank-moreau-offer-letter.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 10,
+      "generate": 2847,
+      "total": 2870
+     },
+     "wall_ms": 2870,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $720,000 new-ACV quota measured quarterly, and the 25% per quarter and month-6 ramp details are both supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q38",
+     "user": "julia.romero@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/sales-playbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "The absolute floor price for the Growth tier is **$31 per seat per month**. It applies only to 3-year prepaid deals above 500 seats, and no deal may go below it under any circumstances [1]. For comparison, Growth's public list price is $79 per seat per month [4].\n\nThis figure is internal only. Don't share it with prospects or put it in emails [1].",
+     "cited_docs": [
+      "all-hands/product-overview-routeiq.md",
+      "sales/sales-playbook.md"
+     ],
+     "retrieved_docs": [
+      "sales/sales-playbook.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md",
+      "all-hands/product-overview-routeiq.md",
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 11,
+      "generate": 3813,
+      "total": 3836
+     },
+     "wall_ms": 3836,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $31 floor and its 3-year prepaid, 500+ seat condition, and every claim, including the $79 list price and the internal-only note, is supported by passages [1] and [4].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q46",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your statement of work (SOW 2026-07, Bob Tanner, Backend Engineering Services) sets the rate at **$95 per hour**, billed monthly in arrears through Deel [1][3]. Billable hours are capped at 30 per week, and hours above that need Erin Walsh's written approval before the work is done [1].",
+     "cited_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "retrieved_docs": [
+      "shared/bob-tanner-statement-of-work.md",
+      "contractors/contractor-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "engineering/api-design-guidelines.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 6,
+      "generate": 3539,
+      "total": 3553
+     },
+     "wall_ms": 3553,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $95/hour rate and the 30-hour weekly cap, and every claim is supported by passages [1] and [3].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q47",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/alice-chen-relocation-letter.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your relocation letter sets the **relocation allowance at €12,400**, paid in two instalments: half with your final US payroll in January 2027 and half with your first Portuguese payroll in February 2027 [1].\n\n- It covers shipping, flights for you and your partner, and temporary accommodation. No receipts are required, but it may be taxable, and you are responsible for any personal tax due [1].\n- Fernhill also directly covers immigration support, up to two hours of tax advice in each country, and up to 30 days in a serviced apartment in Lisbon [1].\n- If you resign within 12 months of starting in Lisbon, you must repay it pro-rata [2].",
+     "cited_docs": [
+      "shared/alice-chen-relocation-letter.md"
+     ],
+     "retrieved_docs": [
+      "shared/alice-chen-relocation-letter.md",
+      "shared/alice-chen-relocation-letter.md",
+      "finance/q3-2026-financial-results.md",
+      "all-hands/expense-policy.md",
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 11,
+      "generate": 4773,
+      "total": 4796
+     },
+     "wall_ms": 4796,
+     "fallback": null,
+     "served_model": "claude-opus-5-5",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the €12,400 allowance paid in two instalments, and every extra detail is supported by passages [1] and [2].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q50",
+     "user": "dan.kim@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/code-of-conduct.md",
+      "all-hands/office-guide.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/office-guide.md",
+      "all-hands/employee-handbook.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 1891,
+      "total": 1908
+     },
+     "wall_ms": 1908,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    },
+    {
+     "id": "q51",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/remote-work-policy.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/code-of-conduct.md",
+      "all-hands/office-guide.md",
+      "all-hands/office-guide.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 4,
+      "retrieve": 7,
+      "generate": 2066,
+      "total": 2081
+     },
+     "wall_ms": 2081,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    },
+    {
+     "id": "q52",
+     "user": "alice.chen@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/ceo-priorities-2027.md",
+      "finance/audit-prep-2026.md",
+      "all-hands/ceo-priorities-2027.md",
+      "finance/audit-prep-2026.md",
+      "it/saas-inventory.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 12,
+      "generate": 1546,
+      "total": 1575
+     },
+     "wall_ms": 1575,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    },
+    {
+     "id": "q53",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "contractors/contractor-onboarding.md",
+      "engineering/engineering-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "all-hands/it-security-basics.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 7,
+      "generate": 1677,
+      "total": 1694
+     },
+     "wall_ms": 1694,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    },
+    {
+     "id": "q54",
+     "user": "ian.brooks@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/employee-handbook.md",
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2287,
+      "total": 2306
+     },
+     "wall_ms": 2307,
+     "fallback": null,
+     "served_model": "claude-opus-5-5"
+    }
+   ]
+  }
+ },
+ "repaired": true
+}
