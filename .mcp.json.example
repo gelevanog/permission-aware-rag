@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "clearance": {
+      "command": "uv",
+      "args": ["run", "--directory", "${CLAUDE_PROJECT_DIR:-.}", "clearance", "mcp"],
+      "env": {
+        "CLEARANCE_MCP_USER": "${CLEARANCE_MCP_USER:-dan.kim}",
+        "CLEARANCE_DATABASE_URL": "${CLEARANCE_DATABASE_URL:-postgresql+psycopg://clearance:clearance@127.0.0.1:55432/clearance}"
+      }
+    }
+  }
+}
