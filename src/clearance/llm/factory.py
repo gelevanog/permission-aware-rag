@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from clearance.config import CLOUD_PROVIDERS, DEFAULT_MODELS, LLMProviderKind, Settings
 from clearance.llm.anthropic_provider import AnthropicModel
-from clearance.llm.base import ChatModel
+from clearance.llm.base import ChatModel, LLMError
 from clearance.llm.budget import BudgetedModel, CallLedger, DiskCache, Throttle
 from clearance.llm.extractive import ExtractiveModel
-from clearance.llm.guards import ensure_free_models, ensure_local_allowed, is_local_url
+from clearance.llm.guards import GATEWAY_FREE_HINT, ensure_free_models, ensure_local_allowed, is_local_url
 from clearance.llm.ollama import OllamaModel
 from clearance.llm.openai_compat import OpenAICompatibleModel
 
@@ -25,6 +25,7 @@ def build_chat_model(
         "ollama": settings.llm_base_url,
         "openai_compatible": settings.llm_base_url,
         "openrouter": settings.openrouter_base_url,
+        "gateway": settings.gateway_base_url,
         "openai": settings.openai_base_url,
     }.get(kind)
     # Guards first: nothing is constructed (no client, no key read) for a refused provider.
@@ -32,6 +33,12 @@ def build_chat_model(
     fallbacks = settings.llm_fallback_models if fallback_models is None else fallback_models
     if kind == "openrouter" and settings.require_free_models:
         ensure_free_models([name, *fallbacks])
+    if kind == "gateway":
+        fallbacks = []  # `models` fallback lists are an OpenRouter extension
+        if not settings.allow_paid_models:
+            ensure_free_models([name], hint=GATEWAY_FREE_HINT)
+        if not base_url:
+            raise LLMError("CLEARANCE_GATEWAY_BASE_URL is not set")
 
     if kind == "extractive":
         return ExtractiveModel()
@@ -43,6 +50,7 @@ def build_chat_model(
         )
     api_key = {
         "openrouter": settings.openrouter_api_key,
+        "gateway": settings.gateway_api_key,
         "openai": settings.openai_api_key,
         "openai_compatible": settings.llm_api_key,
     }[kind]
@@ -52,9 +60,10 @@ def build_chat_model(
         model=name,
         api_key=api_key,
         fallback_models=fallbacks if kind == "openrouter" else (),
-        require_free=settings.require_free_models,
+        require_free=not settings.allow_paid_models if kind == "gateway" else settings.require_free_models,
         timeout_seconds=settings.llm_timeout_seconds,
         local=kind == "openai_compatible" and is_local_url(base_url or "", settings.local_allowed_hosts),
+        send_temperature=settings.llm_send_temperature,
     )
 
 

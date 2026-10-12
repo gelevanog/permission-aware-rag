@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/61d611a9-e6c8-4ab5-acd3-394dc1ad281e
 | Answer quality, local `qwen3.5:4b` vs free cloud `nemotron-3-super-120b` (49 answerable questions, LLM judge) | key facts present **96% vs 96%**; judged correct 86% vs 76%; faithful to the sources **96% vs 100%**; both declined 5 of 5 unanswerable questions |
 | Revoking a user's access to a document | gone on the **next query in 49 of 49** trials, ACL update p50 **5.3 ms**, **0** embeddings recomputed; deleted documents gone 10 of 10 |
 | Latency on CPU (no GPU) | question embedding 4 ms, permission-filtered search 5 ms, local answer p50 **8.7 s** / p95 12.0 s |
-| Cloud usage | 179 OpenRouter requests for the whole evaluation, every model id `:free` ([ledger](results/calls.jsonl)) |
+| Cloud usage | 179 OpenRouter requests for the whole evaluation, every model id `:free` ([ledger](results/calls.jsonl)); a later opt-in run with paid models is reported separately in [Model comparison](#model-comparison) |
 
 **The honest verdict:** filtering before ranking plus row-level security did what it is for: across 330 adversarial user-question pairs not a single restricted chunk reached the model, so no canary could appear in an answer, while the same pipeline without the filter leaked canaries in two answers out of three. Row-level security alone also held when the application's WHERE clause was removed, which is the bug it exists to survive. Post-filtering does not leak, but it quietly loses answers once restricted content crowds the top-k, which real document stores do. The small local model is a real option on a plain CPU: it found the key facts as often as a free 120B cloud model and wrote fuller answers, but it is about three times slower at the median and made two factual mistakes the cloud model did not (misreading a quota, and claiming a floor price was absent when it was there). What retrieval filtering cannot do is stop a model from combining facts a user may legitimately read (see [Limits](#key-design-decisions)). The corpus and questions are synthetic and small; the numbers show the mechanism works, not how it scales to millions of documents. Details below.
 
@@ -55,7 +55,7 @@ Clearance answers each employee only from what they could already open:
 - **"Not available to you" without confirming existence**: configurable policy (`generic` or `contact` with a help-desk pointer); the reply never depends on restricted data. Citations can only point to chunks that were in the permitted context (checked in code).
 - **Identity: OIDC/JWT with group claims.** RS256 verification against the issuer's JWKS (discovery or a fixed URL), issuer/audience/expiry checks, symmetric and `none` algorithms refused. A YAML mapping turns IdP groups (Okta group names, Entra object ids, Google group emails, domains) into principals, the same mapping the connectors use for document grantees. A tiny **dev identity provider** (discovery, JWKS, RS256 ID tokens for the demo users) exercises the same verification path.
 - **Connectors that sync documents and permissions**: local folder or upload with an ACL sidecar (YAML); **Google Drive** (files.list, Docs export to Markdown, permissions.list with inherited permissions, changes feed for incremental sync, service-account JWT auth with domain-wide delegation); **SharePoint / OneDrive via Microsoft Graph** (drive delta queries with deltaLink cursors, effective item permissions incl. Entra groups, site groups and sharing links, client-credentials auth). Unmappable grantees and "anyone with the link" grant nothing (fail closed). A permission-only change in the source rewrites ACL rows without re-embedding.
-- **Local models by default**: `BAAI/bge-small-en-v1.5` embeddings via fastembed (ONNX, CPU) and a local instruct model through Ollama's native API (thinking turned off, explicit context window). Also any **OpenAI-compatible server** (vLLM, LM Studio, llama.cpp server), and cloud providers (**OpenRouter**, **OpenAI**, **Anthropic** via the official SDK) behind a **local-only switch** (on by default) that refuses cloud providers and non-private URLs, and a **free-only guard** that refuses non-`:free` OpenRouter ids and answers served by a paid model.
+- **Local models by default**: `BAAI/bge-small-en-v1.5` embeddings via fastembed (ONNX, CPU) and a local instruct model through Ollama's native API (thinking turned off, explicit context window). Also any **OpenAI-compatible server** (vLLM, LM Studio, llama.cpp server), and cloud providers (**OpenRouter**, **OpenAI**, **Anthropic** via the official SDK) behind a **local-only switch** (on by default) that refuses cloud providers and non-private URLs, and a **free-only guard** that refuses non-`:free` OpenRouter ids and answers served by a paid model. A metered OpenAI-compatible **gateway** (LiteLLM, a budget proxy) is a cloud provider too, free-only unless `CLEARANCE_ALLOW_PAID_MODELS=true` is set.
 - **Audit log**: actor, keyed hash of the principal set and of the question, a 60-character masked preview (numbers, emails, URLs and long tokens masked), retrieved and cited document ids, how many of the k nearest candidates the user's permissions excluded (a count only), model, latency. Admin-only.
 - **Web app (Next.js App Router, TypeScript strict, Tailwind)**: chat with citations and a permission trace; a user switcher ("view as Alice from Finance / Bob the contractor"); **same question, two users** side by side; **access admin** (documents with ACLs and section overrides, live ACL editing with a who-can-read preview and a "try it as someone else" box); evaluation results; audit log.
 - **Evaluation you can rerun**: a hand-written fictional company (60 documents, 11 people, 27 canary facts), 54 authorized and 30 adversarial questions, a leak test against two baselines and an RLS-only ablation, a post-filter recall study, local-vs-cloud answer quality with an LLM judge, permission-change propagation and CPU latency.
@@ -199,7 +199,7 @@ export CLEARANCE_LLM_FALLBACK_MODELS=nvidia/nemotron-3-ultra-550b-a55b:free
 uv run clearance serve
 ```
 
-The free-only guard (`CLEARANCE_REQUIRE_FREE_MODELS=true`, the default) refuses any OpenRouter id without `:free`, checks the fallback list, and rejects an answer that OpenRouter served from a paid model. The evaluation's cloud calls also go through a budget wrapper: disk cache, one request per 3 seconds, retries with backoff on 429 "rate-limited upstream", a hard call budget and a JSONL ledger of every request ([`results/calls.jsonl`](results/calls.jsonl)). OpenAI (`openai`), Anthropic (`anthropic`, official SDK, default `claude-sonnet-5`) and any OpenAI-compatible endpoint (`openai_compatible`: vLLM, LM Studio, a llama.cpp server) are configured the same way; only Ollama and OpenRouter were run for this README.
+The free-only guard (`CLEARANCE_REQUIRE_FREE_MODELS=true`, the default) refuses any OpenRouter id without `:free`, checks the fallback list, and rejects an answer that OpenRouter served from a paid model. The evaluation's cloud calls also go through a budget wrapper: disk cache, one request per 3 seconds, retries with backoff on 429 "rate-limited upstream", a hard call budget and a JSONL ledger of every request ([`results/calls.jsonl`](results/calls.jsonl)). OpenAI (`openai`), Anthropic (`anthropic`, official SDK, default `claude-sonnet-5`) and any OpenAI-compatible endpoint (`openai_compatible`: vLLM, LM Studio, a llama.cpp server) are configured the same way. Paid models are refused unless you opt in explicitly; see [Model comparison](#model-comparison) for the switch and for measured Claude Haiku 5.5, Claude Opus 5.5 and Qwen 3.7 Plus runs through a metered `gateway`.
 
 `make free-models` lists the current free models and smoke-tests three (one call each).
 
@@ -357,6 +357,46 @@ Generation is the whole cost; permission enforcement is a few milliseconds. With
 ### API calls
 
 [`calls_summary.json`](results/calls_summary.json), from the ledger: **179 requests** to OpenRouter in total (154 succeeded, 9 retried after 429/503/504, 16 errors such as the 403s and judge token-limit failures): 5 smoke-test calls, 54 cloud generations plus 5 for the two retried questions, and 115 judge calls. Requested models: `dots-studio/dots-3-note-preview:free`, `nvidia/nemotron-3-super-120b-a12b:free`, `nvidia/nemotron-3-ultra-550b-a55b:free`, `google/gemma-4-31b-it:free`, `google/gemma-4-26b-a4b-it:free`; served: the first three. **Every requested and served model id ends in `:free`**, enforced by the free-only guard. The leak test, the local-model comparison and the local half of the quality run made only local Ollama calls (not counted).
+
+## Model comparison
+
+Defaults are unchanged: local models, and any cloud model must be an OpenRouter `:free` id. Stronger models are an explicit opt-in through the `gateway` provider (an OpenAI-compatible endpoint such as LiteLLM or a budget proxy):
+
+```bash
+# on top of CLEARANCE_LOCAL_ONLY=false, CLEARANCE_GATEWAY_BASE_URL and CLEARANCE_GATEWAY_API_KEY
+export CLEARANCE_ALLOW_PAID_MODELS=true        # without it, ids not ending in ":free" are refused
+export CLEARANCE_LLM_PROVIDER=gateway
+export CLEARANCE_LLM_MODEL=claude-haiku-5-5
+export CLEARANCE_LLM_SEND_TEMPERATURE=false    # Claude 5.5 models reject the temperature parameter
+```
+
+Run on 2026-10-12 with the same corpus, questions, retrieval and prompts as the free baseline above; only the generator changes. Every answer, including the stored free-baseline answers, was graded by one judge (`claude-opus-5-5`), so these numbers differ from the dots-3-judged ones in section 3. Refusals count as wrong.
+
+| Generator | Correct, 49 answerable | Correct, hard 15 | Faithful | p50 latency, cost per answer |
+|---|---|---|---|---|
+| Local `qwen3.5:4b` (CPU, free) | 43/49 (87.8%) | 9/15 | 40/48 | 8.7 s, $0 |
+| `nvidia/nemotron-3-super-120b-a12b:free` | 44/49 (89.8%) | 10/15 | 48/48 | 3.1 s, $0 |
+| `claude-haiku-5-5` | **47/49 (95.9%)** | 13/15 | 48/48 | 1.8 s, ≈ $0.00016 |
+| `claude-opus-5-5` (hard subset only) | not run | 13/15 | 14/14 | 2.8 s, ≈ $0.007 |
+| `qwen3.7-plus` | 46/49 (93.9%) | 12/15 | 48/48 | 2.5 s, ≈ 0.8k tokens (quota) |
+
+The hard subset is the 15 answerable questions that any free model or Haiku missed, so it is biased against the free models by construction. All five generators declined 5/5 unanswerable questions; the four full-set generators all had the key facts in 47/49 answers by the judge-free string check.
+
+The leak test (11 users × 30 adversarial questions = 330 pairs) was repeated with Haiku and Qwen as the generator:
+
+| Pipeline | Restricted chunk in context | Canary in answer, local `qwen3.5:4b` | Canary in answer, Haiku | Canary in answer, Qwen 3.7 Plus |
+|---|---|---|---|---|
+| **Clearance** (pre-filter + RLS) | **0/330** | **0/330** | **0/330** | **0/330** |
+| No permission filter | 286/330 | 214/330 (64.8%) | 210/330 (63.6%) | 212/330 (64.2%) |
+
+- **The permission filter, not the model, prevents leaks.** Once restricted text is in the context, Haiku and Qwen repeat hidden canaries about as often as the 4B local model. Clearance's 0/330 comes from what the database returns, and holds with every generator.
+- **Haiku is the best value on this corpus:** +3 to +4 correct answers over the free models at about $0.05 for the full 54-question run, and the lowest latency. It fixed two answers where both free models dropped a condition or a location.
+- **Opus as a generator added nothing here:** on the hard subset it matched Haiku exactly (same two misses) at about 40× the cost per answer. It was also its own judge on that subset.
+- **Part of the free cloud model's earlier gap was a judge effect:** re-judged by Opus, nemotron went from 75.5% to 89.8% correct. The local 4B model, in turn, was marked unfaithful 8 times by Opus versus 2 by the free judge.
+- **The two misses every model shares (q11, q14) are retrieval problems,** where the needed chunk is not in the top 5; a reranker or chunk-level gold labels would help, a bigger model does not. 49 questions are a small sample: one question separates Haiku from Qwen.
+
+Full numbers, sample sizes, costs, the call ledger and caveats (same-family judge bias, sampling differences, transient gateway errors): [`results/paid-models/COMPARISON.md`](results/paid-models/COMPARISON.md).
+
 ## Key design decisions
 
 **Filter before ranking, never after.** The common retrofit (retrieve the global top-k, then drop what the user may not read) does not leak if the filter is right, but it answers worse: the k slots are spent on documents the user will never see. On this small corpus the effect is modest (98.6% vs 96.5% recall at k = 5); with ten historical copies of each restricted document, which is what real document stores look like (one board pack per quarter, one salary review per year), post-filtering at k = 5 found the gold document for 86.3% of authorized question-user pairs versus 96.1% with the pre-filter, and for 30 pairs it handed the model an empty context. The pre-filter is also simpler to reason about: what the database returns is, by construction, what the user may read. With an HNSW index the filter is applied as the index is walked, so pgvector's iterative scans (`hnsw.iterative_scan`) are enabled to keep returning k permitted rows instead of the few that happened to be among the first candidates (tested with sequential scans disabled).
@@ -383,12 +423,15 @@ All settings are environment variables (or `.env`); [`.env.example`](.env.exampl
 | Variable | Default | What it does |
 |---|---|---|
 | `CLEARANCE_DATABASE_URL` | `postgresql+psycopg://clearance:clearance@localhost:5432/clearance` | PostgreSQL 16+ with pgvector 0.8+ |
-| `CLEARANCE_LLM_PROVIDER` | `ollama` | `ollama`, `openai_compatible`, `extractive`, `openrouter`, `openai`, `anthropic` |
+| `CLEARANCE_LLM_PROVIDER` | `ollama` | `ollama`, `openai_compatible`, `extractive`, `openrouter`, `gateway`, `openai`, `anthropic` |
 | `CLEARANCE_LLM_MODEL` | provider default (`qwen3.5:4b` for Ollama) | model id |
 | `CLEARANCE_LLM_BASE_URL` | `http://localhost:11434/v1` | Ollama or OpenAI-compatible server |
 | `CLEARANCE_LOCAL_ONLY` | `true` | refuse cloud providers and non-private model URLs |
 | `CLEARANCE_LOCAL_ALLOWED_HOSTS` | (empty) | extra host names that count as yours |
 | `CLEARANCE_REQUIRE_FREE_MODELS` | `true` | refuse non-`:free` OpenRouter ids and paid served models |
+| `CLEARANCE_GATEWAY_BASE_URL` / `_API_KEY` | (empty) | a metered OpenAI-compatible gateway, used by `gateway` (always treated as cloud) |
+| `CLEARANCE_ALLOW_PAID_MODELS` | `false` | explicit opt-in for gateway model ids that do not end in `:free` |
+| `CLEARANCE_LLM_SEND_TEMPERATURE` | `true` | `false` for models that reject the temperature parameter |
 | `CLEARANCE_LLM_FALLBACK_TO_EXTRACTIVE` | `true` | quote passages when the local model server is down |
 | `CLEARANCE_EMBEDDING_MODEL` | `BAAI/bge-small-en-v1.5` | any 384-dimension fastembed model |
 | `CLEARANCE_TOP_K` / `CLEARANCE_MIN_SCORE` | `5` / `0.5` | passages given to the model, similarity floor |
@@ -421,7 +464,7 @@ src/clearance/
   auth/                  OIDC/JWT verification, group mapping, dev identity provider
   connectors/            local folder, Google Drive, SharePoint (Graph), OAuth token providers, sync cursors
   db/                    SQLAlchemy models, reader transaction, Alembic migrations (schema + RLS policies)
-  llm/                   Ollama, OpenAI-compatible/OpenRouter, Anthropic, extractive; local-only and free-only
+  llm/                   Ollama, OpenAI-compatible/OpenRouter/gateway, Anthropic, extractive; local-only and free-only
                          guards; budget wrapper (cache, throttle, retries, ledger)
   ingest/                Markdown/.docx parsing into heading paths, section-bounded chunking
   eval/                  questions, canaries, ground-truth oracle, leak/quality/ACL-change/latency runs, judge
@@ -439,7 +482,7 @@ results/                 evaluation results and the call ledger
 ## Testing
 
 ```bash
-make test        # 114 pytest tests: no API keys, no model downloads (hashing embedder + extractive model)
+make test        # 124 pytest tests: no API keys, no model downloads (hashing embedder + extractive model)
 make lint        # ruff check, ruff format --check, mypy --strict
 make web-lint    # eslint + tsc --noEmit (strict)
 make web-build   # next build
@@ -456,7 +499,7 @@ Database tests need PostgreSQL with pgvector at `TEST_DATABASE_URL` (`make db` s
 | `test_api.py` | dev IdP discovery/JWKS/token, 401 without a valid token, principals from the token, same question two users, SSE events, document view hides restricted sections and answers 404 for forbidden and missing documents alike, admin-only endpoints, ACL edit changes the next answer, upload with ACL and delete, audit masking |
 | `test_auth.py` | group mapping (Okta names, Entra object ids, Google group emails), passthrough mode, expired / wrong audience / wrong issuer / forged / HS256 / `none` tokens refused, missing email claim, remote JWKS |
 | `test_connectors.py` | Google Drive and SharePoint against recorded responses: folder walk, Docs export, permission mapping (users, groups, domains, org and anonymous links, unknown grantees dropped, deleted permissions ignored), full then incremental sync with revocations and deletions, service-account and client-credentials token exchange, local folder sidecars |
-| `test_llm_guards.py` | local-only switch (local, private and remote URLs, cloud providers), free-only guard (ids, fallbacks, served model), OpenRouter error mapping and streaming, Ollama request shape, Anthropic provider (mocked client), budget wrapper (retries, cache, ledger without prompts, hard budget) |
+| `test_llm_guards.py` | local-only switch (local, private and remote URLs, cloud providers), free-only guard (ids, fallbacks, served model), the gateway's paid-model opt-in and metering, no retry on an exhausted budget, OpenRouter error mapping and streaming, Ollama request shape, Anthropic provider (mocked client), budget wrapper (retries, cache, ledger without prompts, hard budget) |
 | `test_cache_metrics.py` | cache keys require principals, include the epoch, TTL and LRU; percentiles, hit@k, MRR, canary matching boundaries, judge parsing, audit masking |
 | `test_properties.py` | Hypothesis: the section/deny semantics, and for random users and random ACLs, **retrieved chunks are a subset of allowed chunks** for the pre-filter and the RLS-only query, and the pre-filter returns min(k, permitted) rows |
 | `test_cli_eval.py` | CLI ingest, ask, acl show/set; question set and canaries are consistent with the corpus; the full evaluation end to end without API calls |

@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
 
 import pytest
 from typer.testing import CliRunner
 
 from clearance.cli import app
 from clearance.eval.dataset import CorpusOracle, load_canaries, load_questions
-from clearance.eval.runner import prepare, run_acl_change, run_leak, run_recall
+from clearance.eval.judge import Judge
+from clearance.eval.runner import prepare, rejudge_quality, run_acl_change, run_leak, run_quality, run_recall
+from clearance.llm.base import Completion
 from clearance.llm.extractive import ExtractiveModel
 from tests.conftest import CORPUS, ROOT, TEST_DATABASE_URL, make_settings
 
@@ -96,3 +100,37 @@ def test_evaluation_end_to_end_without_api_calls(tmp_path: Path) -> None:
     assert revocations["excluded_on_next_query"] == revocations["trials"] == revocations["back_after_restore"]
     assert revocations["embeddings_computed"] == 0
     assert change["deletions"]["gone_on_next_query"] == change["deletions"]["trials"] > 0
+
+
+class _FakeJudgeModel:
+    label = "fake/judge"
+    is_local = True
+
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def complete(self, messages: Any, *, max_tokens: int, temperature: float = 0.0) -> Completion:
+        self.calls += 1
+        return Completion(text='{"correct": true, "faithful": true, "reason": "ok"}', model=self.label)
+
+    def stream(self, messages: Any, *, max_tokens: int, temperature: float = 0.0) -> Iterator[str]:
+        yield self.complete(messages, max_tokens=max_tokens).text
+
+
+@pytest.mark.db
+def test_quality_subset_and_rejudge_without_api_calls(tmp_path: Path) -> None:
+    from clearance.embeddings import HashEmbedder
+
+    settings = make_settings(database_url=TEST_DATABASE_URL, dev_idp_key_file=tmp_path / "k.pem")
+    ctx = prepare(settings, embedder=HashEmbedder(), model=ExtractiveModel())
+    ids = [q.id for q in ctx.questions.authorized if q.answerable][:3]
+    data = run_quality(ctx, {"x": ExtractiveModel()}, None, question_ids=ids)
+    assert data["questions"] == 3 and [r["id"] for r in data["generators"]["x"]["rows"]] == ids
+    with pytest.raises(ValueError, match="unknown question"):
+        run_quality(ctx, {"x": ExtractiveModel()}, None, question_ids=["no-such-question"])
+    fake = _FakeJudgeModel()
+    rejudged = rejudge_quality(ctx, data, Judge(fake))
+    answered = [r for r in rejudged["generators"]["x"]["rows"] if r["outcome"] == "answered"]
+    assert fake.calls == len(answered) and rejudged["judge"] == "fake/judge" and rejudged["judge_original"] is None
+    assert all(r["judge"]["correct"] is True for r in answered)
+    assert rejudged["generators"]["x"]["summary"]["judged"] == len(answered)
