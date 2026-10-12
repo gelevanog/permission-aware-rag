@@ -10,6 +10,7 @@ from typing import Any
 import httpx
 import pytest
 
+from clearance.config import Settings
 from clearance.llm.base import (
     BudgetExceededError,
     LLMError,
@@ -93,6 +94,100 @@ def test_factory_refuses_paid_openrouter_models_and_fallbacks() -> None:
     assert build_chat_model(settings, provider="openrouter", model="x/y:free").label == "openrouter/x/y:free"
     relaxed = make_settings(local_only=False, openrouter_api_key="k", require_free_models=False)
     assert build_chat_model(relaxed, provider="openrouter", model="anthropic/claude-sonnet-5")
+
+
+# ---- metered gateway and the paid-model opt-in ---------------------------------------------------------------
+GATEWAY = "http://127.0.0.1:8787/v1"  # a local budget proxy that forwards to a cloud API: still a cloud provider
+
+
+def test_paid_models_are_not_allowed_by_default() -> None:
+    assert Settings(_env_file=None).allow_paid_models is False  # type: ignore[call-arg]
+    assert make_settings().allow_paid_models is False
+
+
+def test_gateway_is_a_cloud_provider_even_on_a_local_host() -> None:
+    settings = make_settings(llm_provider="gateway", gateway_base_url=GATEWAY, gateway_api_key="k")
+    with pytest.raises(PolicyViolationError, match="local-only"):
+        build_chat_model(settings, model="x/y:free")
+
+
+def test_gateway_is_free_only_without_the_opt_in() -> None:
+    settings = make_settings(local_only=False, gateway_base_url=GATEWAY, gateway_api_key="k")
+    with pytest.raises(PolicyViolationError, match="CLEARANCE_ALLOW_PAID_MODELS"):
+        build_chat_model(settings, provider="gateway", model="claude-haiku-5-5")
+    with pytest.raises(PolicyViolationError, match="non-free"):  # the provider class checks on its own, too
+        OpenAICompatibleModel(kind="gateway", base_url=GATEWAY, model="claude-haiku-5-5", api_key="k")
+    free = build_chat_model(settings, provider="gateway", model="x/y:free")
+    assert free.label == "gateway/x/y:free" and not free.is_local
+
+
+def test_gateway_allows_paid_models_with_the_opt_in_only() -> None:
+    settings = make_settings(local_only=False, gateway_base_url=GATEWAY, gateway_api_key="k", allow_paid_models=True)
+    model = build_chat_model(settings, provider="gateway", model="claude-haiku-5-5")
+    assert model.label == "gateway/claude-haiku-5-5"
+    # the opt-in is for the gateway only: OpenRouter stays free-only
+    with pytest.raises(PolicyViolationError):
+        build_chat_model(settings.model_copy(update={"openrouter_api_key": "k"}), provider="openrouter", model="a/b")
+
+
+def test_gateway_needs_a_url_and_a_key() -> None:
+    with pytest.raises(LLMError, match="GATEWAY_BASE_URL"):
+        build_chat_model(make_settings(local_only=False, gateway_api_key="k"), provider="gateway", model="x/y:free")
+    with pytest.raises(LLMError, match="GATEWAY_API_KEY"):
+        build_chat_model(
+            make_settings(local_only=False, gateway_base_url=GATEWAY), provider="gateway", model="x/y:free"
+        )
+
+
+def _gateway(handler: Any, *, require_free: bool) -> OpenAICompatibleModel:
+    return OpenAICompatibleModel(
+        kind="gateway",
+        base_url=GATEWAY,
+        model="claude-haiku-5-5" if not require_free else "x/y:free",
+        api_key="proj-test",
+        require_free=require_free,
+        transport=httpx.MockTransport(handler),
+    )
+
+
+def test_gateway_requests_and_served_model_check() -> None:
+    seen: dict[str, Any] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.update(json.loads(request.content), auth=request.headers["authorization"])
+        usage = {"prompt_tokens": 12, "completion_tokens": 3}
+        return httpx.Response(
+            200, json={"model": "claude-haiku-5-5", "choices": [{"message": {"content": "hi"}}], "usage": usage}
+        )
+
+    completion = _gateway(handler, require_free=False).complete(MESSAGES, max_tokens=10)
+    assert completion.text == "hi" and completion.input_tokens == 12
+    assert seen["model"] == "claude-haiku-5-5" and "models" not in seen and seen["auth"] == "Bearer proj-test"
+    with pytest.raises(PolicyViolationError, match="served non-free"):
+        _gateway(handler, require_free=True).complete(MESSAGES, max_tokens=10)
+
+
+def test_gateway_calls_are_metered(tmp_path: Path) -> None:
+    settings = make_settings(
+        local_only=False, gateway_base_url=GATEWAY, gateway_api_key="k", llm_ledger=tmp_path / "calls.jsonl"
+    )
+    wrapped = budgeted(build_chat_model(settings, provider="gateway", model="x/y:free"), settings, tag="t")
+    assert isinstance(wrapped, BudgetedModel)
+
+
+def test_eval_cli_refuses_paid_gateway_models_by_default() -> None:
+    from typer.testing import CliRunner
+
+    from clearance.cli import app
+
+    env = {"CLEARANCE_GATEWAY_BASE_URL": GATEWAY, "CLEARANCE_GATEWAY_API_KEY": "k", "CLEARANCE_LLM_LEDGER": ""}
+    args = ["eval", "quality", "--skip-local", "--cloud-provider", "gateway", "--cloud-model", "claude-haiku-5-5"]
+    result = CliRunner().invoke(app, [*args, "--judge-provider", "gateway", "--judge-model", "x/y:free"], env=env)
+    assert result.exit_code != 0
+    assert isinstance(result.exception, PolicyViolationError)
+    assert "CLEARANCE_ALLOW_PAID_MODELS" in str(result.exception)
+    bogus = CliRunner().invoke(app, [*args, "--cloud-provider", "openai"], env=env)
+    assert bogus.exit_code != 0
 
 
 def _openrouter(handler: Any, **kwargs: Any) -> OpenAICompatibleModel:

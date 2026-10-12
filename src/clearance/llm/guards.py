@@ -6,7 +6,8 @@
   single-label name such as the Compose service ``ollama``, ends in ``.local``/``.internal``/``.lan``, or is listed
   in ``CLEARANCE_LOCAL_ALLOWED_HOSTS``.
 * **Free-only guard** (on by default): refuses any OpenRouter model id that does not end in ``:free``, and rejects
-  an answer that OpenRouter served from a non-free model.
+  an answer that OpenRouter served from a non-free model. A metered ``gateway`` endpoint is free-only too unless
+  ``CLEARANCE_ALLOW_PAID_MODELS=true`` is set explicitly.
 """
 
 from __future__ import annotations
@@ -17,7 +18,9 @@ from urllib.parse import urlparse
 
 from clearance.llm.base import PolicyViolationError
 
-CLOUD_KINDS = frozenset({"openrouter", "openai", "anthropic"})
+CLOUD_KINDS = frozenset({"openrouter", "gateway", "openai", "anthropic"})
+OPENROUTER_FREE_HINT = "set CLEARANCE_REQUIRE_FREE_MODELS=false to allow paid models"
+GATEWAY_FREE_HINT = "set CLEARANCE_ALLOW_PAID_MODELS=true to allow paid models on the gateway"
 _LOCAL_SUFFIXES = (".local", ".internal", ".lan", ".localhost", ".home.arpa")
 
 
@@ -50,17 +53,14 @@ def ensure_local_allowed(
         )
 
 
-def ensure_free_models(model_ids: Iterable[str]) -> None:
+def ensure_free_models(model_ids: Iterable[str], *, hint: str = OPENROUTER_FREE_HINT) -> None:
     paid = [model for model in model_ids if not str(model).endswith(":free")]
     if paid:
-        raise PolicyViolationError(
-            f"free-only guard: refusing non-free OpenRouter model id(s): {', '.join(paid)} "
-            "(set CLEARANCE_REQUIRE_FREE_MODELS=false to allow paid models)"
-        )
+        raise PolicyViolationError(f"free-only guard: refusing non-free model id(s): {', '.join(paid)} ({hint})")
 
 
 def ensure_served_free(served_model: str | None) -> None:
     if served_model and not served_model.endswith(":free"):
         raise PolicyViolationError(
-            f"free-only guard: OpenRouter served non-free model {served_model!r}; answer rejected"
+            f"free-only guard: the endpoint served non-free model {served_model!r}; answer rejected"
         )

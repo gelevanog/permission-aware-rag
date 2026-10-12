@@ -1,4 +1,5 @@
-"""OpenAI-compatible chat completions over HTTP: vLLM, LM Studio, llama.cpp server, Ollama's /v1, OpenAI, OpenRouter."""
+"""OpenAI-compatible chat completions over HTTP: vLLM, LM Studio, llama.cpp server, Ollama's /v1, OpenAI, OpenRouter,
+and a metered gateway (LiteLLM, a budget proxy)."""
 
 from __future__ import annotations
 
@@ -9,9 +10,10 @@ from typing import Any, Literal
 import httpx
 
 from clearance.llm.base import Completion, LLMError, LLMUnavailableError, Message, RetryableLLMError
-from clearance.llm.guards import ensure_free_models, ensure_served_free
+from clearance.llm.guards import GATEWAY_FREE_HINT, OPENROUTER_FREE_HINT, ensure_free_models, ensure_served_free
 
-Kind = Literal["openai_compatible", "openrouter", "openai"]
+Kind = Literal["openai_compatible", "openrouter", "gateway", "openai"]
+_API_KEY_ENV = {"openrouter": "OPENROUTER_API_KEY", "gateway": "CLEARANCE_GATEWAY_API_KEY", "openai": "OPENAI_API_KEY"}
 
 OPENROUTER_HEADERS = {
     "HTTP-Referer": "https://github.com/gelevanog/permission-aware-rag",
@@ -33,14 +35,15 @@ class OpenAICompatibleModel:
         local: bool = False,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
-        if kind in {"openrouter", "openai"} and not api_key:
-            raise LLMError(f"{'OPENROUTER' if kind == 'openrouter' else 'OPENAI'}_API_KEY is not set")
+        if kind in _API_KEY_ENV and not api_key:
+            raise LLMError(f"{_API_KEY_ENV[kind]} is not set")
         self.kind = kind
         self.model = model
         self.fallback_models = list(fallback_models)
-        self.require_free = require_free and kind == "openrouter"
+        self.require_free = require_free and kind in {"openrouter", "gateway"}
+        self._free_hint = GATEWAY_FREE_HINT if kind == "gateway" else OPENROUTER_FREE_HINT
         if self.require_free:
-            ensure_free_models([model, *self.fallback_models])
+            ensure_free_models([model, *self.fallback_models], hint=self._free_hint)
         self._url = base_url.rstrip("/") + "/chat/completions"
         self._headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         if kind == "openrouter":
@@ -65,11 +68,10 @@ class OpenAICompatibleModel:
             "temperature": temperature,
             "stream": stream,
         }
-        if self.kind == "openrouter":
-            if self.fallback_models:
-                body["models"] = [self.model, *self.fallback_models]
-            if self.require_free:
-                ensure_free_models([body["model"], *body.get("models", [])])
+        if self.kind == "openrouter" and self.fallback_models:
+            body["models"] = [self.model, *self.fallback_models]
+        if self.require_free:
+            ensure_free_models([body["model"], *body.get("models", [])], hint=self._free_hint)
         return body
 
     def _client(self) -> httpx.Client:

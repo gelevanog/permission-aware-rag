@@ -9,7 +9,7 @@ from typing import Annotated, Literal
 from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
-LLMProviderKind = Literal["extractive", "ollama", "openai_compatible", "openrouter", "openai", "anthropic"]
+LLMProviderKind = Literal["extractive", "ollama", "openai_compatible", "openrouter", "gateway", "openai", "anthropic"]
 EmbeddingProviderKind = Literal["fastembed", "hash"]
 NoAnswerPolicy = Literal["generic", "contact"]
 
@@ -27,10 +27,11 @@ DEFAULT_MODELS: dict[str, str] = {
     "ollama": DEFAULT_LOCAL_MODEL,
     "openai_compatible": DEFAULT_LOCAL_MODEL,
     "openrouter": DEFAULT_FREE_MODEL,
+    "gateway": DEFAULT_FREE_MODEL,
     "openai": "gpt-5-mini",
     "anthropic": "claude-sonnet-5",
 }
-CLOUD_PROVIDERS = frozenset({"openrouter", "openai", "anthropic"})
+CLOUD_PROVIDERS = frozenset({"openrouter", "gateway", "openai", "anthropic"})
 
 DEFAULT_NO_ANSWER = "I couldn't find that in documents available to you."
 DEFAULT_CONTACT = (
@@ -82,6 +83,12 @@ class Settings(BaseSettings):
     local_allowed_hosts: Annotated[list[str], NoDecode] = Field(default_factory=list)
     require_free_models: bool = True
     """Refuse any OpenRouter model id that does not end in ":free" (requests and the model that answered)."""
+    gateway_base_url: str = ""
+    """A metered OpenAI-compatible gateway (LiteLLM, a budget proxy, ...) used as a cloud provider: refused in
+    local-only mode, its calls go through the evaluation ledger like OpenRouter's, whatever host it runs on."""
+    gateway_api_key: str | None = None
+    allow_paid_models: bool = False
+    """Explicit opt-in for gateway model ids that do not end in ":free". Off: the gateway is free-only too."""
 
     openrouter_api_key: str | None = Field(default=None, validation_alias=AliasChoices("OPENROUTER_API_KEY"))
     openai_api_key: str | None = Field(default=None, validation_alias=AliasChoices("OPENAI_API_KEY"))

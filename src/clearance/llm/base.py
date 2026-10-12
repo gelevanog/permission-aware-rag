@@ -40,7 +40,7 @@ class LLMUnavailableError(LLMError):
 
 
 class PolicyViolationError(LLMError):
-    """A guard refused the request: cloud call while local-only, or a non-free OpenRouter model."""
+    """A guard refused the request: cloud call while local-only, or a non-free model without the opt-in."""
 
 
 class BudgetExceededError(LLMError):

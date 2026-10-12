@@ -9,7 +9,7 @@ import platform
 import time
 import uuid
 from collections import Counter, defaultdict
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -389,9 +389,19 @@ def run_recall_study(
 # 2. Answer quality
 # ---------------------------------------------------------------------------------------------------------
 def run_quality(
-    ctx: EvalContext, generators: dict[str, ChatModel], judge: Judge | None, *, log_prefix: str = "quality"
+    ctx: EvalContext,
+    generators: dict[str, ChatModel],
+    judge: Judge | None,
+    *,
+    log_prefix: str = "quality",
+    question_ids: Collection[str] | None = None,
 ) -> dict[str, Any]:
+    """Every authorized question (or the subset `question_ids`) for each generator, graded by the judge."""
     company = ctx.services.directory.company if ctx.services.directory else "the company"
+    questions = [q for q in ctx.questions.authorized if question_ids is None or q.id in question_ids]
+    if question_ids is not None and len(questions) != len(set(question_ids)):
+        unknown = sorted(set(question_ids) - {q.id for q in questions})
+        raise ValueError(f"unknown question id(s): {', '.join(unknown)}")
     results: dict[str, Any] = {}
     retrieval: dict[str, Any] = {}
     for label, model in generators.items():
@@ -405,7 +415,7 @@ def run_quality(
             company=company,
         )
         rows: list[dict[str, Any]] = []
-        for question in ctx.questions.authorized:
+        for question in questions:
             identity = ctx.identities[question.user]
             started = time.perf_counter()
             try:
@@ -463,7 +473,7 @@ def run_quality(
             }
     return {
         **_meta(ctx, judge=judge.label if judge else None),
-        "questions": len(ctx.questions.authorized),
+        "questions": len(questions),
         "retrieval": retrieval,
         "generators": results,
     }
@@ -526,6 +536,28 @@ def repair_quality(
                 console.log(f"repair {label} {row['id']}: judge={row['judge'].get('correct')}")
         generator["summary"] = summarize_quality(generator["rows"])
     data["repaired"] = True
+    return data
+
+
+def rejudge_quality(ctx: EvalContext, data: dict[str, Any], judge: Judge) -> dict[str, Any]:
+    """Grade the stored answers of a quality run again with another judge (the earlier verdict is kept as
+    `judge_original`), so answers from different runs can be compared under one judge. Nothing is re-generated."""
+    questions = {q.id: q for q in ctx.questions.authorized}
+    for label, generator in data["generators"].items():
+        for row in generator["rows"]:
+            question = questions[row["id"]]
+            if "error" in row or not question.answerable or row["outcome"] != "answered":
+                continue
+            identity = ctx.identities[question.user]
+            vector = ctx.services.embedder.embed_query(question.question)
+            context = ctx.context_of(ctx.retriever.search(vector, identity.principals, ctx.settings.top_k))
+            if "judge" in row:
+                row["judge_original"] = row["judge"]
+            row["judge"] = judge.grade(question, row["answer"], context)
+            console.log(f"rejudge {label} {row['id']}: judge={row['judge'].get('correct')}")
+        generator["summary"] = summarize_quality(generator["rows"])
+    data["judge_original"] = data.get("judge")
+    data["judge"] = judge.label
     return data
 
 

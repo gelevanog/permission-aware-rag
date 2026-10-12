@@ -252,6 +252,23 @@ def _cloud_settings(settings: Settings) -> Settings:
     return settings.model_copy(update={"local_only": False})
 
 
+EVAL_CLOUD_PROVIDERS = ("openrouter", "gateway")
+
+
+def _eval_cloud_model(settings: Settings, provider: str, model: str, *, fallbacks: list[str], tag: str) -> Any:
+    """A cloud model for an evaluation role (generator, judge): OpenRouter (free-only), or a metered gateway, which
+    is free-only too unless CLEARANCE_ALLOW_PAID_MODELS=true. Wrapped with the ledger, cache and throttle."""
+    from clearance.llm.factory import budgeted, build_chat_model
+
+    if provider not in EVAL_CLOUD_PROVIDERS:
+        raise typer.BadParameter(f"provider must be one of {', '.join(EVAL_CLOUD_PROVIDERS)}")
+    kind: LLMProviderKind = "gateway" if provider == "gateway" else "openrouter"
+    chat = build_chat_model(
+        settings, provider=kind, model=model, fallback_models=fallbacks if kind == "openrouter" else []
+    )
+    return budgeted(chat, settings, tag=tag)
+
+
 @eval_app.command("leak")
 def eval_leak(
     generate: Annotated[str, typer.Option(help="Comma-separated systems to also generate answers for")] = "",
@@ -265,7 +282,11 @@ def eval_leak(
 
     settings = _settings()
     targets = [name.strip() for name in generate.split(",") if name.strip()]
-    generator = build_chat_model(settings, provider=_provider(provider), model=model) if targets else None
+    generator = None
+    if targets and provider in EVAL_CLOUD_PROVIDERS:
+        generator = _eval_cloud_model(_cloud_settings(settings), provider, model or "", fallbacks=[], tag="leak")
+    elif targets:
+        generator = build_chat_model(settings, provider=_provider(provider), model=model)
     ctx = prepare(settings, model=_extractive())
     result = run_leak(ctx, generator, generate_for=targets)
     result["postfilter_recall"] = run_recall(ctx)
@@ -300,9 +321,17 @@ def _print_leak(result: dict[str, Any]) -> None:
 @eval_app.command("quality")
 def eval_quality(
     local_model: Annotated[str | None, typer.Option(help="Ollama model for the local generator")] = None,
-    cloud_model: Annotated[str | None, typer.Option(help="Free OpenRouter model id (must end in :free)")] = None,
-    judge_model: Annotated[str | None, typer.Option(help="Free OpenRouter judge model id")] = None,
+    cloud_model: Annotated[str | None, typer.Option(help="Cloud generator model id (free unless opted in)")] = None,
+    judge_model: Annotated[str | None, typer.Option(help="Judge model id (free unless opted in)")] = None,
+    cloud_provider: Annotated[
+        str, typer.Option(help="openrouter | gateway (CLEARANCE_GATEWAY_BASE_URL)")
+    ] = "openrouter",
+    judge_provider: Annotated[
+        str, typer.Option(help="openrouter | gateway (CLEARANCE_GATEWAY_BASE_URL)")
+    ] = "openrouter",
     skip_cloud: Annotated[bool, typer.Option(help="Local generator only, no judge (no API calls)")] = False,
+    skip_local: Annotated[bool, typer.Option(help="Cloud generator only (no Ollama)")] = False,
+    questions: Annotated[str, typer.Option(help="Comma-separated question ids (default: all authorized)")] = "",
     output: Annotated[Path, typer.Option()] = Path("results/quality.json"),
 ) -> None:
     """Answer quality on authorized questions: local vs free cloud model, judged by a free cloud model."""
@@ -314,65 +343,79 @@ def eval_quality(
     )
     from clearance.eval.judge import Judge
     from clearance.eval.runner import prepare, run_quality, write_json
-    from clearance.llm.factory import budgeted, build_chat_model
+    from clearance.llm.factory import build_chat_model
 
+    if skip_local and skip_cloud:
+        raise typer.BadParameter("--skip-local and --skip-cloud leave nothing to evaluate")
     settings = _settings()
-    generators = {"local": build_chat_model(settings, provider="ollama", model=local_model)}
+    generators: dict[str, Any] = {}
+    if not skip_local:
+        generators["local"] = build_chat_model(settings, provider="ollama", model=local_model)
     judge = None
     if not skip_cloud:
         cloud = _cloud_settings(settings)
         cloud_id = cloud_model or DEFAULT_FREE_MODEL
         fallbacks = [m for m in DEFAULT_FREE_FALLBACKS if m != cloud_id]
-        generators["cloud"] = budgeted(
-            build_chat_model(cloud, provider="openrouter", model=cloud_id, fallback_models=fallbacks),
-            cloud,
-            tag="generate",
-        )
+        generators["cloud"] = _eval_cloud_model(cloud, cloud_provider, cloud_id, fallbacks=fallbacks, tag="generate")
         judge_id = judge_model or DEFAULT_JUDGE_MODEL
         judge_fallbacks = [m for m in DEFAULT_JUDGE_FALLBACKS if m != judge_id]
-        judge = Judge(
-            budgeted(
-                build_chat_model(cloud, provider="openrouter", model=judge_id, fallback_models=judge_fallbacks),
-                cloud,
-                tag="judge",
-            )
-        )
+        judge = Judge(_eval_cloud_model(cloud, judge_provider, judge_id, fallbacks=judge_fallbacks, tag="judge"))
+    ids = [q.strip() for q in questions.split(",") if q.strip()] or None
     ctx = prepare(settings, model=_extractive())
-    result = run_quality(ctx, generators, judge)
+    result = run_quality(ctx, generators, judge, question_ids=ids)
     write_json(output, result)
     for label, data in result["generators"].items():
         console.print(label, data["model"], data["summary"])
+
+
+@eval_app.command("rejudge")
+def eval_rejudge(
+    path: Annotated[Path, typer.Option(help="Quality results whose answers are graded again")] = Path(
+        "results/quality.json"
+    ),
+    output: Annotated[Path, typer.Option()] = Path("results/quality-rejudged.json"),
+    judge_model: Annotated[str | None, typer.Option(help="Judge model id (free unless opted in)")] = None,
+    judge_provider: Annotated[
+        str, typer.Option(help="openrouter | gateway (CLEARANCE_GATEWAY_BASE_URL)")
+    ] = "openrouter",
+) -> None:
+    """Grade the stored answers of a quality run again with another judge (no answers are re-generated), so runs
+    judged by different models can be compared under one judge. Earlier verdicts are kept as judge_original."""
+    from clearance.config import DEFAULT_JUDGE_FALLBACKS, DEFAULT_JUDGE_MODEL
+    from clearance.eval.judge import Judge
+    from clearance.eval.runner import prepare, rejudge_quality, write_json
+
+    cloud = _cloud_settings(_settings())
+    judge_id = judge_model or DEFAULT_JUDGE_MODEL
+    fallbacks = [m for m in DEFAULT_JUDGE_FALLBACKS if m != judge_id]
+    judge = Judge(_eval_cloud_model(cloud, judge_provider, judge_id, fallbacks=fallbacks, tag="rejudge"))
+    data = json.loads(path.read_text(encoding="utf-8"))
+    ctx = prepare(cloud, model=_extractive())
+    result = rejudge_quality(ctx, data, judge)
+    write_json(output, result)
+    for label, gen in result["generators"].items():
+        console.print(label, gen["summary"])
 
 
 @eval_app.command("quality-repair")
 def eval_quality_repair(
     path: Annotated[Path, typer.Option()] = Path("results/quality.json"),
     retry_model: Annotated[str | None, typer.Option(help="Free model for cloud rows that errored")] = None,
+    judge_model: Annotated[str | None, typer.Option(help="Judge model id (free unless opted in)")] = None,
+    provider: Annotated[str, typer.Option(help="openrouter | gateway, for the judge and the retry")] = "openrouter",
 ) -> None:
     """Fill the gaps of a quality run: re-judge answers whose verdict failed (timeouts, token limit) and re-ask
     cloud questions whose generation errored (with a fallback free model). Summaries are recomputed."""
     from clearance.config import DEFAULT_FREE_FALLBACKS, DEFAULT_JUDGE_FALLBACKS, DEFAULT_JUDGE_MODEL
     from clearance.eval.judge import Judge
     from clearance.eval.runner import prepare, repair_quality, write_json
-    from clearance.llm.factory import budgeted, build_chat_model
 
     cloud = _cloud_settings(_settings())
-    judge = Judge(
-        budgeted(
-            build_chat_model(
-                cloud, provider="openrouter", model=DEFAULT_JUDGE_MODEL, fallback_models=DEFAULT_JUDGE_FALLBACKS
-            ),
-            cloud,
-            tag="judge",
-        )
-    )
-    retry = budgeted(
-        build_chat_model(
-            cloud, provider="openrouter", model=retry_model or DEFAULT_FREE_FALLBACKS[0], fallback_models=[]
-        ),
-        cloud,
-        tag="generate-retry",
-    )
+    judge_id = judge_model or DEFAULT_JUDGE_MODEL
+    judge_fallbacks = [m for m in DEFAULT_JUDGE_FALLBACKS if m != judge_id]
+    judge = Judge(_eval_cloud_model(cloud, provider, judge_id, fallbacks=judge_fallbacks, tag="judge"))
+    retry_id = retry_model or DEFAULT_FREE_FALLBACKS[0]
+    retry = _eval_cloud_model(cloud, provider, retry_id, fallbacks=[], tag="generate-retry")
     data = json.loads(path.read_text(encoding="utf-8"))
     ctx = prepare(cloud, model=_extractive())
     result = repair_quality(ctx, data, judge, {"cloud": retry})
