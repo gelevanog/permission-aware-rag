@@ -1,13 +1,13 @@
 {
- "total_requests": 630,
+ "total_requests": 863,
  "by_status": {
-  "ok": 563,
+  "ok": 796,
   "error": 67
  },
  "by_tag": {
   "generate": 132,
   "judge": 118,
-  "leak": 238,
+  "leak": 471,
   "generate-retry": 2,
   "rejudge": 140
  },
@@ -19,11 +19,11 @@
  "served_models": {
   "claude-haiku-5-5": 288,
   "claude-opus-5-5": 218,
-  "qwen3.7-plus": 57
+  "qwen3.7-plus": 290
  },
  "all_model_ids_free": false,
- "input_tokens": 646710,
- "output_tokens": 72100,
+ "input_tokens": 828774,
+ "output_tokens": 76749,
  "first": "2026-10-12T08:49:15+00:00",
- "last": "2026-10-12T09:28:33+00:00"
+ "last": "2026-10-12T09:44:56+00:00"
 }

@@ -18,6 +18,7 @@ min_score 0.5, recall@5 of the gold document 1.0 for every run.
 | Qwen | `qwen3.7-plus` | `claude-opus-5-5` | 54 (full set) | `quality-qwen.json` |
 | Qwen smoke (superseded) | `qwen3.7-plus`, max_tokens 150 | `claude-opus-5-5` | 4 requested, 3 answered; q53 was refused by the original 3,000-token Qwen budget, which was raised afterwards | `quality-qwen-smoke.json` |
 | Leak test | `claude-haiku-5-5` for Clearance and the unfiltered baseline | n/a (canary string match) | 30 adversarial questions x 11 users = 330 pairs | `leak-haiku.json` |
+| Leak test | `qwen3.7-plus` for Clearance and the unfiltered baseline | n/a (canary string match) | the same 330 pairs | `leak-qwen.json` |
 
 Opus is the judge for every row in the comparison, so all generators are graded by one judge.
 The original free judge (dots-3) is shown for reference only. Every request is in `calls.jsonl`, summarized in
@@ -54,17 +55,19 @@ The original free judge (dots-3) is shown for reference only. Every request is i
 The subset was chosen *because* the baseline struggled on it, so the free models' numbers here are biased low by
 construction; read it as "what does a stronger model fix", not as an unbiased accuracy estimate.
 
-## Leak test (permission filtering), Haiku vs the free baseline generator
+## Leak test (permission filtering), Haiku and Qwen vs the free baseline generator
 
-| System | Restricted chunk in context | Hidden canary in context | Canary in answer, baseline (`qwen3.5:4b`) | Canary in answer, Haiku |
-|---|---|---|---|---|
-| **Clearance** (pre-filter + RLS) | **0/330** | **0/330** | **0/330** | **0/330** |
-| RLS only (ablation) | 0/330 | 0/330 | not generated | not generated |
-| Post-filter | 0/330 (100 empty contexts) | 0/330 | not generated | not generated |
-| Unfiltered | 286/330 | 223/330 | 214/330 (64.8%) | 210/330 (63.6%) |
+| System | Restricted chunk in context | Hidden canary in context | Canary in answer, baseline (`qwen3.5:4b`) | Canary in answer, Haiku | Canary in answer, Qwen 3.7 Plus |
+|---|---|---|---|---|---|
+| **Clearance** (pre-filter + RLS) | **0/330** | **0/330** | **0/330** | **0/330** | **0/330** |
+| RLS only (ablation) | 0/330 | 0/330 | not generated | not generated | not generated |
+| Post-filter | 0/330 (100 empty contexts) | 0/330 | not generated | not generated | not generated |
+| Unfiltered | 286/330 | 223/330 | 214/330 (64.8%) | 210/330 (63.6%) | 212/330 (64.2%) |
 
-Context-level numbers are identical to the baseline, as expected: filtering does not depend on the model. Clearance
-answered "not available to you" in 207 of 330 pairs with Haiku (194 with the local model). Post-filter recall at k=5
+Context-level numbers are identical in all three runs, as expected: filtering does not depend on the model.
+Clearance answered "not available to you" in 194 of 330 pairs with the local model, 207 with Haiku and 211 with
+Qwen. Without the filter, Qwen leaked by question style in 110/165 direct, 88/132 indirect and 14/33 injection
+pairs, almost the same as the baseline's 112, 88 and 14. Post-filter recall at k=5
 is unchanged (98.6% vs 96.5%).
 
 ## Cost and sample sizes
@@ -73,11 +76,11 @@ is unchanged (98.6% vs 96.5%).
 |---|---|---|---|---|
 | claude-haiku-5-5 | 288 / 55 | 329k / 38k | ≈ $0.05 | 54 quality generations (+2 re-asks), 236 leak-test generations, 1 smoke |
 | claude-opus-5-5 | 218 / 11 | 272k / 32k | ≈ $1.74 | 136 re-judgements of stored answers ($1.15: the 96 baseline answers, the 2 Qwen smoke answers and the 48 full-run Qwen answers; identical judge prompts are served from the disk cache and not billed again), 62 judgements of Haiku/Opus/Qwen-smoke answers ($0.44), 20 generations ($0.14) |
-| qwen3.7-plus | 57 / 1 | 45,454 / 1,534 | 46,988 of 150,000 tokens | 54 full-set generations and 3 earlier smoke generations; one smoke call was refused under the original 3,000-token cap |
+| qwen3.7-plus | 290 / 1 | 227,518 / 6,183 | 233,701 of 500,000 tokens | 236 leak-test generations (186,713 tokens), 54 full-set quality generations, 3 earlier smoke generations; one smoke call was refused under the original 3,000-token cap |
 
 Ledger estimates use $0.10/$0.50 (Haiku) and $4/$20 (Opus) per 1M tokens. The proxy's budget endpoint reports
 **$1.97 of Anthropic spend** for this project in total, slightly above the ledger's $1.79 because it also counts a few
-manual probe calls made outside the harness while debugging. The proxy reports 46,988 Qwen tokens, which matches the
+manual probe calls made outside the harness while debugging. The proxy reports 233,701 Qwen tokens, which matches the
 ledger exactly. Errors cost nothing:
 - 14 transient `403 Request not allowed` responses from the gateway. Each succeeded when re-run.
 - 52 `temperature is deprecated` rejections of judge calls (4 Opus, 48 Haiku). These came from runs where
@@ -111,17 +114,17 @@ errors occurred: the proxy restart did not hit any call.
   priorities") the top 5 contains Priorities 1 and 2 but not Priority 3. Haiku and Opus said so explicitly and
   did not guess. Document-level recall@5 is 1.0, which hides these chunk-level misses. Next steps would be
   chunk-level gold labels, a larger k, or a re-ranker, not a bigger model.
-- **Leakage stays at zero, and the model is not the defence.** With Haiku, Clearance leaked 0/330 at context
-  level and 0/330 at answer level. With the filter removed, Haiku repeated hidden canaries in 210/330 answers,
-  about the same as the 4B local model (214/330). A stronger model refuses a little more often but does not stop
+- **Leakage stays at zero, and the model is not the defence.** With Haiku and with Qwen 3.7 Plus, Clearance
+  leaked 0/330 at context level and 0/330 at answer level. With the filter removed, Haiku repeated hidden canaries
+  in 210/330 answers and Qwen in 212/330, about the same as the 4B local model (214/330). A stronger model refuses a little more often but does not stop
   repeating restricted content once it is in the context. The permission pre-filter and RLS are what keep it out.
 - **Qwen 3.7 Plus is a close second on the full set.** It got 46/49 correct, was 48/48 faithful, cited a gold
   document in every answer and declined all 5 unanswerable questions, with a p50 of 2.5 s. It wrote the tersest
   answers: Qwen used 1,534 output tokens across 57 calls, and Haiku used 4,332 across 52 generations. Its one miss
   beyond the shared q11/q14 failures is the omission type nemotron also makes: on q33 it named the role but not the
   reporting line or the location. One question separates it from Haiku, which is within noise for 49 questions.
-  No leak test was run with Qwen: 236 generations of about 1,100 tokens each would not fit in the remaining Qwen
-  budget. Context-level filtering does not depend on the model anyway.
+  In the leak test it behaves like the other models: 0/330 leaks through Clearance, and 212/330 with the filter
+  off.
 
 ## Run notes and differences from the baseline
 
@@ -145,3 +148,4 @@ errors occurred: the proxy restart did not hit any call.
   - `clearance eval quality --skip-local --cloud-provider gateway --cloud-model claude-opus-5-5 --judge-provider gateway --judge-model claude-opus-5-5 --questions q01,q02,q05,q07,q10,q11,q14,q21,q32,q33,q35,q37,q38,q46,q47,q50,q51,q52,q53,q54 --output results/paid-models/quality-opus-subset.json`
   - `CLEARANCE_LLM_SEND_TEMPERATURE=true clearance eval quality --skip-local --cloud-provider gateway --cloud-model qwen3.7-plus ... --output results/paid-models/quality-qwen.json` (temperature on for Qwen; the judge calls in this step failed on temperature, and those placeholder verdicts were dropped), then `clearance eval rejudge --path results/paid-models/quality-qwen.json --output results/paid-models/quality-qwen.json --judge-provider gateway --judge-model claude-opus-5-5`. The smoke file was produced the same way with `--questions q11,q21,q46,q53` and max_tokens 150.
   - `clearance eval leak --generate clearance,unfiltered --provider gateway --model claude-haiku-5-5 --output results/paid-models/leak-haiku.json`
+  - `CLEARANCE_LLM_SEND_TEMPERATURE=true clearance eval leak --generate clearance,unfiltered --provider gateway --model qwen3.7-plus --output results/paid-models/leak-qwen.json`. This ran in one pass (686 s, 233 calls, no errors; 3 pairs had an empty context and needed no call), with temperature 0 and max_tokens 700. Qwen calls had a p50 of 2.2 s and a p95 of 4.3 s.
