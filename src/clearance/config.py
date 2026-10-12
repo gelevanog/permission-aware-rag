@@ -78,6 +78,8 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = 180.0
     llm_max_tokens: int = 700
     llm_temperature: float = 0.0
+    llm_send_temperature: bool = True
+    """Off for models that reject the parameter (some newer API models); they then sample with their default."""
     local_only: bool = True
     """Refuse every cloud provider and any OpenAI-compatible URL that is not on this machine or a private network."""
     local_allowed_hosts: Annotated[list[str], NoDecode] = Field(default_factory=list)

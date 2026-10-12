@@ -34,6 +34,7 @@ class OpenAICompatibleModel:
         require_free: bool = True,
         timeout_seconds: float = 180.0,
         local: bool = False,
+        send_temperature: bool = True,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
         if kind in _API_KEY_ENV and not api_key:
@@ -52,6 +53,7 @@ class OpenAICompatibleModel:
         self._timeout = timeout_seconds
         self._transport = transport
         self._local = local
+        self._send_temperature = send_temperature
 
     @property
     def label(self) -> str:
@@ -66,9 +68,10 @@ class OpenAICompatibleModel:
             "model": self.model,
             "messages": list(messages),
             "max_tokens": max_tokens,
-            "temperature": temperature,
             "stream": stream,
         }
+        if self._send_temperature:
+            body["temperature"] = temperature
         if self.kind == "openrouter" and self.fallback_models:
             body["models"] = [self.model, *self.fallback_models]
         if self.require_free:

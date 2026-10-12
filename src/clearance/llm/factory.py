@@ -63,6 +63,7 @@ def build_chat_model(
         require_free=not settings.allow_paid_models if kind == "gateway" else settings.require_free_models,
         timeout_seconds=settings.llm_timeout_seconds,
         local=kind == "openai_compatible" and is_local_url(base_url or "", settings.local_allowed_hosts),
+        send_temperature=settings.llm_send_temperature,
     )
 
 

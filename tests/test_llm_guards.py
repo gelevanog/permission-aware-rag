@@ -163,6 +163,19 @@ def test_gateway_requests_and_served_model_check() -> None:
     completion = _gateway(handler, require_free=False).complete(MESSAGES, max_tokens=10)
     assert completion.text == "hi" and completion.input_tokens == 12
     assert seen["model"] == "claude-haiku-5-5" and "models" not in seen and seen["auth"] == "Bearer proj-test"
+    assert seen["temperature"] == 0.0
+    no_temperature = OpenAICompatibleModel(
+        kind="gateway",
+        base_url=GATEWAY,
+        model="claude-haiku-5-5",
+        api_key="k",
+        require_free=False,
+        send_temperature=False,
+        transport=httpx.MockTransport(handler),
+    )
+    seen.clear()
+    no_temperature.complete(MESSAGES, max_tokens=10)
+    assert "temperature" not in seen
     with pytest.raises(PolicyViolationError, match="served non-free"):
         _gateway(handler, require_free=True).complete(MESSAGES, max_tokens=10)
 
