@@ -1,0 +1,2052 @@
+{
+ "date": "2026-10-12",
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "top_k": 5,
+ "min_score": 0.5,
+ "documents": 60,
+ "chunks": 352,
+ "users": 11,
+ "machine": "x86_64, Linux, CPU only",
+ "judge": "gateway/claude-opus-5-5",
+ "questions": 54,
+ "retrieval": {
+  "questions": 49,
+  "recall_at_k": 1.0,
+  "mrr": 0.973
+ },
+ "generators": {
+  "cloud": {
+   "model": "gateway/qwen3.7-plus",
+   "summary": {
+    "answerable": 49,
+    "errors": 0,
+    "correct": 46,
+    "correctness": 0.9388,
+    "graded": 49,
+    "judged": 48,
+    "faithfulness": 1.0,
+    "expect_met": 0.9592,
+    "false_refusals": 1,
+    "answered_with_citation": 1.0,
+    "cited_a_gold_doc": 1.0,
+    "unanswerable": 5,
+    "unanswerable_declined": 5,
+    "generate_ms": {
+     "n": 54,
+     "p50": 2501.0,
+     "p95": 3069.2,
+     "mean": 2568.6,
+     "max": 3752
+    },
+    "fallbacks": 0
+   },
+   "rows": [
+    {
+     "id": "q01",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/employee-handbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "Full-time employees receive 25 days of paid time off per year [1]. This is in addition to the public holidays of the office location specified in their contract [1].",
+     "cited_docs": [
+      "all-hands/employee-handbook.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/employee-handbook.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 9,
+      "generate": 2450,
+      "total": 2471
+     },
+     "wall_ms": 2471,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 25 days plus public holidays of the contract office location, matching the gold answer and fully supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q02",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The per diem for meals in Portugal is €55 per day [1]. On the first and last day of a trip, this amount is reduced to 75% of the daily rate [1].",
+     "cited_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/travel-policy.md",
+      "all-hands/travel-policy.md",
+      "all-hands/expense-policy.md",
+      "all-hands/travel-policy.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2817,
+      "total": 2835
+     },
+     "wall_ms": 2835,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives €55 per day and the 75% rate on the first and last days, matching the gold answer and passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q03",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The hotel price cap in Europe is €180 per night, excluding taxes [1].",
+     "cited_docs": [
+      "all-hands/travel-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/travel-policy.md",
+      "all-hands/travel-policy.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "all-hands/product-overview-routeiq.md",
+      "all-hands/travel-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 11,
+      "generate": 2229,
+      "total": 2251
+     },
+     "wall_ms": 2251,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the €180 per night Europe cap excluding taxes, which matches the gold answer and is supported by passage [1]; omitting the US figure is fine because the question only asks about Europe.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q04",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/remote-work-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The office anchor days are Tuesday and Thursday [1][2].",
+     "cited_docs": [
+      "all-hands/office-guide.md",
+      "all-hands/remote-work-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/office-guide.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/employee-handbook.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 0.5,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 13,
+      "generate": 2416,
+      "total": 2449
+     },
+     "wall_ms": 2449,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives Tuesday and Thursday, matching the gold answer, and passages [1] and [2] state this explicitly.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q05",
+     "user": "julia.romero@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/expense-policy.md"
+     ],
+     "outcome": "answered",
+     "answer": "The one-time home-office stipend is $500, or €460 for employees in Portugal [1].",
+     "cited_docs": [
+      "all-hands/expense-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/expense-policy.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/learning-and-development.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 3011,
+      "total": 3028
+     },
+     "wall_ms": 3028,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $500 (or €460 in Portugal) one-time stipend, which matches the gold answer and is supported by passage [1]; omitting the eligible items does not drop a key fact for a 'how much' question.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q06",
+     "user": "ian.brooks@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/it-helpdesk-faq.md"
+     ],
+     "outcome": "answered",
+     "answer": "Laptops are replaced every 3 years [1]. They may be replaced earlier if they fail or cannot run the necessary tools [1].",
+     "cited_docs": [
+      "all-hands/it-helpdesk-faq.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/it-helpdesk-faq.md",
+      "it/it-admin-runbook.md",
+      "all-hands/it-security-basics.md",
+      "it/saas-inventory.md",
+      "all-hands/remote-work-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 10,
+      "generate": 2588,
+      "total": 2609
+     },
+     "wall_ms": 2609,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 3-year cycle and the early-replacement conditions, both stated in passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q07",
+     "user": "grace.liu@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/parental-leave-policy.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "outcome": "answered",
+     "answer": "Primary caregivers receive 16 weeks of parental leave [1][3]. This leave is paid at 100% of base salary [1].",
+     "cited_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/parental-leave-policy.md",
+      "all-hands/parental-leave-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/parental-leave-policy.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 4,
+      "generate": 2569,
+      "total": 2583
+     },
+     "wall_ms": 2583,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives 16 weeks at 100% pay for primary caregivers, which is supported by passages [1] and [3]; the secondary-caregiver detail is outside the question's scope.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q08",
+     "user": "hana.sato@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/code-of-conduct.md"
+     ],
+     "outcome": "answered",
+     "answer": "Under the Code of Conduct, you may accept gifts with a value of up to $75 (or the local equivalent) per person per year from any single company [1]. Any gift exceeding this amount must be declined or reported to Legal [1]. Additionally, cash and gift cards are never permitted [1].",
+     "cited_docs": [
+      "all-hands/code-of-conduct.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/code-of-conduct.md",
+      "all-hands/expense-policy.md",
+      "all-hands/code-of-conduct.md",
+      "all-hands/expense-policy.md",
+      "legal/contract-templates-guide.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2947,
+      "total": 2965
+     },
+     "wall_ms": 2965,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $75-per-person-per-year limit from any single company, and every added detail (declining or reporting larger gifts, no cash or gift cards) is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q09",
+     "user": "erin.walsh@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/office-guide.md"
+     ],
+     "outcome": "answered",
+     "answer": "The address of the Lisbon office is Rua da Prata 112, 1100-417 Lisboa [1].",
+     "cited_docs": [
+      "all-hands/office-guide.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/office-guide.md",
+      "all-hands/office-guide.md",
+      "all-hands/office-guide.md",
+      "all-hands/office-guide.md",
+      "all-hands/all-hands-2026-q3-recap.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 2365,
+      "total": 2384
+     },
+     "wall_ms": 2384,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the correct street address, postcode and city from passage [1], but omits the 'floors 3 and 4' detail in the gold answer; the core address is complete.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q10",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/product-overview-routeiq.md"
+     ],
+     "outcome": "answered",
+     "answer": "The public list price for the Growth tier is $79 per seat per month, billed annually [1].",
+     "cited_docs": [
+      "all-hands/product-overview-routeiq.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/product-overview-routeiq.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "engineering/tech-debt-roadmap-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 14,
+      "generate": 2149,
+      "total": 2176
+     },
+     "wall_ms": 2176,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives $79 per seat per month, billed annually, which matches the gold answer and is directly supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q11",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/compensation-philosophy.md"
+     ],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/benefits-overview.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/compensation-philosophy.md"
+     ],
+     "expect_met": false,
+     "hit_at_k": true,
+     "reciprocal_rank": 0.2,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 5,
+      "generate": 2142,
+      "total": 2159
+     },
+     "wall_ms": 2159,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q12",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/holiday-calendar-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The winter shutdown runs from Thursday 24 December 2026 to Friday 1 January 2027 [1].",
+     "cited_docs": [
+      "all-hands/holiday-calendar-2026.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/holiday-calendar-2026.md",
+      "sales/q4-2026-pipeline-review.md",
+      "all-hands/all-hands-2026-q3-recap.md",
+      "all-hands/holiday-calendar-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2492,
+      "total": 2509
+     },
+     "wall_ms": 2509,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the exact shutdown dates from the gold answer, and passage [1] supports them.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q13",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/learning-and-development.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "outcome": "answered",
+     "answer": "The annual learning budget is $1,500 per employee [1][2]. This amount applies to the calendar year and does not carry over if unused [1].",
+     "cited_docs": [
+      "all-hands/benefits-overview.md",
+      "all-hands/learning-and-development.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/learning-and-development.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/learning-and-development.md",
+      "all-hands/learning-and-development.md",
+      "all-hands/compensation-philosophy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2671,
+      "total": 2689
+     },
+     "wall_ms": 2689,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states the $1,500 per calendar year budget, and its claims about the calendar year and no carry-over are supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q14",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/ceo-priorities-2027.md"
+     ],
+     "outcome": "answered",
+     "answer": "The three company priorities for 2027 are:\n\n1. Enterprise expansion [1].\n2. A credible path to profitability [4].\n3. The third priority is not explicitly named in the provided passages, though the memo states that leadership agreed on three priorities [3].",
+     "cited_docs": [
+      "all-hands/ceo-priorities-2027.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "all-hands/ceo-priorities-2027.md",
+      "finance/budget-2027-draft.md"
+     ],
+     "expect_met": false,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 10,
+      "generate": 2863,
+      "total": 2886
+     },
+     "wall_ms": 2886,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": false,
+      "faithful": true,
+      "reason": "The answer correctly names enterprise expansion and path to profitability but omits platform reliability; its claim that the passages do not name the third priority is accurate.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q15",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "all-hands/it-security-basics.md",
+      "contractors/contractor-onboarding.md"
+     ],
+     "outcome": "answered",
+     "answer": "The required screen lock timeout is 5 minutes of inactivity for company laptops [1]. Contractors using their own devices must also set a screen lock of 5 minutes or less [3].",
+     "cited_docs": [
+      "all-hands/it-security-basics.md",
+      "contractors/contractor-onboarding.md"
+     ],
+     "retrieved_docs": [
+      "all-hands/it-security-basics.md",
+      "all-hands/it-helpdesk-faq.md",
+      "contractors/contractor-onboarding.md",
+      "engineering/deployment-process.md",
+      "all-hands/it-helpdesk-faq.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 2695,
+      "total": 2712
+     },
+     "wall_ms": 2712,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 5-minute inactivity lock from [1] and correctly adds the contractor requirement from [3], both supported by the passages.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q16",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/competitor-battlecard.md"
+     ],
+     "outcome": "answered",
+     "answer": "Our win rate against Routelytics is approximately 41% [1].",
+     "cited_docs": [
+      "sales/competitor-battlecard.md"
+     ],
+     "retrieved_docs": [
+      "sales/competitor-battlecard.md",
+      "sales/competitor-battlecard.md",
+      "sales/competitor-battlecard.md",
+      "sales/competitor-battlecard.md",
+      "sales/competitor-battlecard.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 11,
+      "generate": 2808,
+      "total": 2834
+     },
+     "wall_ms": 2834,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 41% win rate against Routelytics, which matches the gold answer and passage [1]; the FleetMind figure in the gold is supplementary to the question asked.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q17",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "legal/contract-templates-guide.md"
+     ],
+     "outcome": "answered",
+     "answer": "VPs can sign contracts up to $100,000 in total contract value within their own budget [1].",
+     "cited_docs": [
+      "legal/contract-templates-guide.md"
+     ],
+     "retrieved_docs": [
+      "legal/contract-templates-guide.md",
+      "sales/sales-compensation-plan-2026.md",
+      "legal/contract-templates-guide.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 10,
+      "generate": 2213,
+      "total": 2233
+     },
+     "wall_ms": 2233,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer matches the gold answer: up to $100,000 total contract value within their own budget, as stated in passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q18",
+     "user": "ian.brooks@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/security-incident-response-plan.md",
+      "legal/data-processing-overview.md"
+     ],
+     "outcome": "answered",
+     "answer": "A personal data breach must be reported to the supervisory authority within 72 hours of becoming aware of it [1][2].",
+     "cited_docs": [
+      "engineering/security-incident-response-plan.md",
+      "legal/data-processing-overview.md"
+     ],
+     "retrieved_docs": [
+      "engineering/security-incident-response-plan.md",
+      "legal/data-processing-overview.md",
+      "legal/data-processing-overview.md",
+      "it/it-admin-runbook.md",
+      "engineering/security-incident-response-plan.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 13,
+      "generate": 2510,
+      "total": 2535
+     },
+     "wall_ms": 2535,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key fact of 72 hours, which passages [1] and [2] support; omitting the CNPD is minor since the question asks only about timing.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q19",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "contractors/contractor-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "outcome": "answered",
+     "answer": "Contractor timesheets are due by the 3rd business day of each month for the previous month [1].",
+     "cited_docs": [
+      "contractors/contractor-onboarding.md"
+     ],
+     "retrieved_docs": [
+      "contractors/contractor-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "engineering/engineering-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "contractors/contractor-onboarding.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 4,
+      "retrieve": 5,
+      "generate": 2559,
+      "total": 2571
+     },
+     "wall_ms": 2571,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer matches the gold (3rd business day of each month, for the previous month) and is directly supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q20",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/deployment-process.md"
+     ],
+     "outcome": "answered",
+     "answer": "The production release train runs every Tuesday and Thursday [1].",
+     "cited_docs": [
+      "engineering/deployment-process.md"
+     ],
+     "retrieved_docs": [
+      "engineering/deployment-process.md",
+      "engineering/deployment-process.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/engineering-onboarding.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 4,
+      "generate": 2064,
+      "total": 2076
+     },
+     "wall_ms": 2076,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives Tuesday and Thursday, which matches the gold answer and is directly supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q21",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "outcome": "answered",
+     "answer": "New API list endpoints must use cursor pagination [1]. Offset pagination should not be used for new endpoints [1].",
+     "cited_docs": [
+      "engineering/api-design-guidelines.md"
+     ],
+     "retrieved_docs": [
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/architecture-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 4,
+      "generate": 3030,
+      "total": 3042
+     },
+     "wall_ms": 3042,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key facts, cursor pagination and no offset pagination, both supported by passage [1], though it omits the default limit of 50 and the maximum of 200.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q22",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/on-call-handbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "The on-call stipend for a primary week is $350 (or the euro equivalent through Portuguese payroll) [1].",
+     "cited_docs": [
+      "engineering/on-call-handbook.md"
+     ],
+     "retrieved_docs": [
+      "engineering/on-call-handbook.md",
+      "all-hands/expense-policy.md",
+      "all-hands/benefits-overview.md",
+      "all-hands/parental-leave-policy.md",
+      "engineering/on-call-handbook.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 2443,
+      "total": 2460
+     },
+     "wall_ms": 2460,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $350 primary-week stipend, which matches the gold, and every claim is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q23",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/incident-postmortem-2026-08-routing-outage.md"
+     ],
+     "outcome": "answered",
+     "answer": "The INC-2291 routing outage lasted for 3 hours and 12 minutes [1]. It occurred from 05:41 to 08:53 Lisbon time on 14 August 2026 [1].",
+     "cited_docs": [
+      "engineering/incident-postmortem-2026-08-routing-outage.md"
+     ],
+     "retrieved_docs": [
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 12,
+      "generate": 3752,
+      "total": 3773
+     },
+     "wall_ms": 3773,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer matches the gold answer's duration of 3h12m, the 05:41-08:53 Lisbon window, and the date, and every claim is supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q24",
+     "user": "erin.walsh@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/production-access-runbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "The Vault path for the break-glass production credentials is `secret/prod/breakglass-7731` [1].",
+     "cited_docs": [
+      "engineering/production-access-runbook.md"
+     ],
+     "retrieved_docs": [
+      "engineering/production-access-runbook.md",
+      "engineering/production-access-runbook.md",
+      "engineering/production-access-runbook.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "contractors/contractor-onboarding.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2459,
+      "total": 2473
+     },
+     "wall_ms": 2473,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the Vault path secret/prod/breakglass-7731, which matches the gold answer and passage [1]; the two-of-five approval detail is supplementary rather than the asked-for fact.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q25",
+     "user": "dan.kim@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/tech-debt-roadmap-2027.md"
+     ],
+     "outcome": "answered",
+     "answer": "API v1 will be switched off on 30 June 2027 [1]. This date is also cited as the deadline for having zero customers remaining on API v1 [3].",
+     "cited_docs": [
+      "engineering/tech-debt-roadmap-2027.md"
+     ],
+     "retrieved_docs": [
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/api-design-guidelines.md",
+      "engineering/tech-debt-roadmap-2027.md",
+      "engineering/incident-postmortem-2026-08-routing-outage.md",
+      "engineering/tech-debt-roadmap-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2751,
+      "total": 2768
+     },
+     "wall_ms": 2768,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 30 June 2027 switch-off date from passage [1], and passage [3] supports its claim about zero customers on v1 after that date.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q26",
+     "user": "erin.walsh@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "engineering/engineering-career-ladder.md"
+     ],
+     "outcome": "answered",
+     "answer": "The salary band for a Senior Engineer (L4) is $158,000 – $186,000 [1].",
+     "cited_docs": [
+      "engineering/engineering-career-ladder.md"
+     ],
+     "retrieved_docs": [
+      "engineering/engineering-career-ladder.md",
+      "engineering/engineering-career-ladder.md",
+      "engineering/engineering-career-ladder.md",
+      "all-hands/compensation-philosophy.md",
+      "engineering/production-access-runbook.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 2660,
+      "total": 2677
+     },
+     "wall_ms": 2677,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the gold range of $158,000 – $186,000, which passage [1] supports, though it omits the US-based 2026 qualifier.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q27",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "finance/q3-2026-financial-results.md"
+     ],
+     "outcome": "answered",
+     "answer": "Revenue in Q3 2026 was $14.82 million [1].",
+     "cited_docs": [
+      "finance/q3-2026-financial-results.md"
+     ],
+     "retrieved_docs": [
+      "finance/q3-2026-financial-results.md",
+      "finance/q3-2026-financial-results.md",
+      "finance/q3-2026-financial-results.md",
+      "finance/budget-2027-draft.md",
+      "finance/budget-2027-draft.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 4,
+      "retrieve": 8,
+      "generate": 2418,
+      "total": 2435
+     },
+     "wall_ms": 2435,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the gold figure of $14.82 million, which passage [1] supports; omitting the management-accounts qualifier does not change the key fact.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q28",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "finance/customer-revenue-concentration.md"
+     ],
+     "outcome": "answered",
+     "answer": "Northgate Freight, the largest customer, accounts for 18.6% of ARR [1].",
+     "cited_docs": [
+      "finance/customer-revenue-concentration.md"
+     ],
+     "retrieved_docs": [
+      "finance/customer-revenue-concentration.md",
+      "finance/customer-revenue-concentration.md",
+      "finance/q3-2026-financial-results.md",
+      "finance/customer-revenue-concentration.md",
+      "finance/customer-revenue-concentration.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 4,
+      "generate": 2380,
+      "total": 2396
+     },
+     "wall_ms": 2396,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer names Northgate Freight as the largest customer at 18.6% of ARR, which matches the gold answer and is directly supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q29",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "finance/vendor-payments-runbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "Vendor payment runs happen every Tuesday and Friday [1].",
+     "cited_docs": [
+      "finance/vendor-payments-runbook.md"
+     ],
+     "retrieved_docs": [
+      "finance/vendor-payments-runbook.md",
+      "finance/vendor-payments-runbook.md",
+      "finance/vendor-payments-runbook.md",
+      "finance/vendor-payments-runbook.md",
+      "finance/vendor-payments-runbook.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 12,
+      "generate": 2215,
+      "total": 2238
+     },
+     "wall_ms": 2238,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states Tuesday and Friday, matching the gold answer and directly supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q30",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "finance/audit-prep-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "Audit fieldwork for FY2026 is scheduled to take place from 2–13 February 2027 [1]. The first week will be conducted on site in Lisbon, while the second week will be remote [1].",
+     "cited_docs": [
+      "finance/audit-prep-2026.md"
+     ],
+     "retrieved_docs": [
+      "finance/audit-prep-2026.md",
+      "finance/audit-prep-2026.md",
+      "finance/audit-prep-2026.md",
+      "finance/audit-prep-2026.md",
+      "finance/audit-prep-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 8,
+      "generate": 2831,
+      "total": 2850
+     },
+     "wall_ms": 2850,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the correct 2–13 February 2027 dates and the Lisbon on-site first week, all supported by passage [1]; omitting the auditor's name does not affect the 'when' question.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q31",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "finance/budget-2027-draft.md"
+     ],
+     "outcome": "answered",
+     "answer": "The draft 2027 budget for Engineering is $9.4 million [1].",
+     "cited_docs": [
+      "finance/budget-2027-draft.md"
+     ],
+     "retrieved_docs": [
+      "finance/budget-2027-draft.md",
+      "finance/budget-2027-draft.md",
+      "finance/budget-2027-draft.md",
+      "hr/headcount-plan-2027.md",
+      "hr/headcount-plan-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 7,
+      "generate": 2535,
+      "total": 2555
+     },
+     "wall_ms": 2555,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key figure of $9.4 million, which passage [1] supports, but it leaves out the +14% change versus the 2026 forecast.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q32",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/compensation-review-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The overall merit budget for the 2026 compensation review was 3.8% of total base payroll [1]. This was accompanied by a separate promotion pool of 1.2% [1].",
+     "cited_docs": [
+      "hr/compensation-review-2026.md"
+     ],
+     "retrieved_docs": [
+      "hr/compensation-review-2026.md",
+      "hr/compensation-review-2026.md",
+      "all-hands/compensation-philosophy.md",
+      "hr/manager-guide-performance-reviews.md",
+      "hr/compensation-review-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2916,
+      "total": 2936
+     },
+     "wall_ms": 2936,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states the 3.8% merit budget and the separate 1.2% promotion pool, both supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q33",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/headcount-plan-2027.md"
+     ],
+     "outcome": "answered",
+     "answer": "Requisition HC-2027-114 is for the role of Head of Data [1].",
+     "cited_docs": [
+      "hr/headcount-plan-2027.md"
+     ],
+     "retrieved_docs": [
+      "hr/headcount-plan-2027.md",
+      "hr/headcount-plan-2027.md",
+      "hr/headcount-plan-2027.md",
+      "hr/employee-relations-case-log.md",
+      "hr/headcount-plan-2027.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 8,
+      "generate": 3002,
+      "total": 3021
+     },
+     "wall_ms": 3021,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": false,
+      "faithful": true,
+      "reason": "The answer correctly names the Head of Data role, as supported by passage [1], but omits the reporting line (VP Engineering) and location (Lisbon) given in the gold answer.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q34",
+     "user": "julia.romero@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/manager-guide-performance-reviews.md"
+     ],
+     "outcome": "answered",
+     "answer": "Performance review calibration sessions take place from 28 October to 6 November [2]. These sessions involve managers, the department head, and a People partner to ensure rating consistency across departments [1].",
+     "cited_docs": [
+      "hr/manager-guide-performance-reviews.md"
+     ],
+     "retrieved_docs": [
+      "hr/manager-guide-performance-reviews.md",
+      "hr/manager-guide-performance-reviews.md",
+      "all-hands/compensation-philosophy.md",
+      "sales/q4-2026-pipeline-review.md",
+      "hr/manager-guide-performance-reviews.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 10,
+      "generate": 3497,
+      "total": 3518
+     },
+     "wall_ms": 3518,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the correct 28 October to 6 November calibration dates, and its claims about participants and purpose are supported by passages [1] and [2].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q35",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "hr/hr-team-handbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "We use Checkr for background checks in the US [1][3].",
+     "cited_docs": [
+      "hr/hr-team-handbook.md"
+     ],
+     "retrieved_docs": [
+      "hr/hr-team-handbook.md",
+      "shared/frank-moreau-offer-letter.md",
+      "hr/hr-team-handbook.md",
+      "legal/data-processing-overview.md",
+      "legal/data-processing-overview.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 2368,
+      "total": 2388
+     },
+     "wall_ms": 2388,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer names Checkr, the provider the question asks for; leaving out the 'Standard' package detail is a minor gap, and the claim is supported by passages [1] and [3].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q36",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/key-accounts-notes.md"
+     ],
+     "outcome": "answered",
+     "answer": "Granite Bay Logistics is renewing at a 37% discount off the Growth list price [1].",
+     "cited_docs": [
+      "sales/key-accounts-notes.md"
+     ],
+     "retrieved_docs": [
+      "sales/key-accounts-notes.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/key-accounts-notes.md",
+      "all-hands/product-overview-routeiq.md",
+      "legal/contract-templates-guide.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2144,
+      "total": 2163
+     },
+     "wall_ms": 2163,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 37% discount off Growth list price, which is the fact the question asks for and is supported by passage [1]; it leaves out the 3-year prepaid term, which is secondary.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q37",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The annual quota for a fully ramped Account Executive is $720,000 in new annual contract value (ACV) [1].",
+     "cited_docs": [
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "retrieved_docs": [
+      "sales/sales-compensation-plan-2026.md",
+      "shared/frank-moreau-offer-letter.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/expense-policy.md",
+      "shared/frank-moreau-offer-letter.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2259,
+      "total": 2275
+     },
+     "wall_ms": 2275,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key fact, $720,000 in new ACV, which passage [1] supports; omitting the quarterly measurement detail is minor.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q38",
+     "user": "julia.romero@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/sales-playbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "The absolute floor price for the Growth tier is $31 per seat per month [1]. This price applies only to 3-year prepaid deals with more than 500 seats [1]. No deal may go below this price under any circumstances [1].",
+     "cited_docs": [
+      "sales/sales-playbook.md"
+     ],
+     "retrieved_docs": [
+      "sales/sales-playbook.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md",
+      "all-hands/product-overview-routeiq.md",
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 9,
+      "generate": 2841,
+      "total": 2865
+     },
+     "wall_ms": 2865,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $31 per seat per month floor and the 3-year prepaid, 500+ seat condition, and both are stated in passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q39",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "outcome": "answered",
+     "answer": "The total open pipeline for Q4 2026 is $6.2 million in annual contract value across 58 opportunities [1].",
+     "cited_docs": [
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "retrieved_docs": [
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md",
+      "sales/q4-2026-pipeline-review.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 9,
+      "generate": 2473,
+      "total": 2494
+     },
+     "wall_ms": 2494,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the key figures, $6.2 million ACV across 58 opportunities, all supported by passage [1]; it omits only the parenthetical 3.1x coverage.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q40",
+     "user": "grace.liu@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "legal/veltrix-dispute-memo.md"
+     ],
+     "outcome": "answered",
+     "answer": "The CEO and CFO approved settlement authority up to $2.35 million for a fully paid-up, worldwide licence to the Veltrix patent portfolio [1]. This authority covers all current and future RouteIQ products, includes a release of all past claims, and involves no admission of liability [1]. Any settlement exceeding this amount requires board approval [1].",
+     "cited_docs": [
+      "legal/veltrix-dispute-memo.md"
+     ],
+     "retrieved_docs": [
+      "legal/veltrix-dispute-memo.md",
+      "legal/veltrix-dispute-memo.md",
+      "legal/veltrix-dispute-memo.md",
+      "legal/veltrix-dispute-memo.md",
+      "legal/veltrix-dispute-memo.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 3142,
+      "total": 3159
+     },
+     "wall_ms": 3159,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $2.35M authority for a fully paid-up worldwide licence and the board-approval requirement above that, with every claim supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q41",
+     "user": "grace.liu@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "legal/trademark-portfolio.md"
+     ],
+     "outcome": "answered",
+     "answer": "The Section 8 declaration for the US ROUTEIQ word mark is due by 20 July 2027 [1][2].",
+     "cited_docs": [
+      "legal/trademark-portfolio.md"
+     ],
+     "retrieved_docs": [
+      "legal/trademark-portfolio.md",
+      "legal/trademark-portfolio.md",
+      "legal/trademark-portfolio.md",
+      "legal/trademark-portfolio.md",
+      "legal/trademark-portfolio.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 6,
+      "retrieve": 6,
+      "generate": 2578,
+      "total": 2596
+     },
+     "wall_ms": 2596,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the 20 July 2027 due date, which matches the gold answer and is directly supported by passages [1] and [2].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q42",
+     "user": "hana.sato@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "leadership/project-kingfisher-acquisition-memo.md"
+     ],
+     "outcome": "answered",
+     "answer": "The codename for the planned acquisition is Project Kingfisher [2][5]. The target company is Quillstone Analytics [2].",
+     "cited_docs": [
+      "leadership/project-kingfisher-acquisition-memo.md"
+     ],
+     "retrieved_docs": [
+      "leadership/project-kingfisher-acquisition-memo.md",
+      "leadership/project-kingfisher-acquisition-memo.md",
+      "leadership/project-kingfisher-acquisition-memo.md",
+      "leadership/board-meeting-minutes-2026-09.md",
+      "leadership/project-kingfisher-acquisition-memo.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2481,
+      "total": 2498
+     },
+     "wall_ms": 2498,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer names the codename (Project Kingfisher) and the target (Quillstone Analytics), which are what the question asks for, and both are supported by passages [2] and [5]; the price in the gold answer is extra detail.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q43",
+     "user": "kofi.mensah@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "leadership/board-meeting-minutes-2026-09.md"
+     ],
+     "outcome": "answered",
+     "answer": "The targeted pre-money valuation for the Series C is $410 million [1].",
+     "cited_docs": [
+      "leadership/board-meeting-minutes-2026-09.md"
+     ],
+     "retrieved_docs": [
+      "leadership/board-meeting-minutes-2026-09.md",
+      "finance/q3-2026-financial-results.md",
+      "leadership/project-kingfisher-acquisition-memo.md",
+      "sales/sales-playbook.md",
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2161,
+      "total": 2175
+     },
+     "wall_ms": 2175,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $410 million pre-money valuation, which is the fact the question asks for, and passage [1] supports it; the $60 million raise in the gold answer is extra detail.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q44",
+     "user": "carol.diaz@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "leadership/reorg-plan-operation-driftwood.md"
+     ],
+     "outcome": "answered",
+     "answer": "Operation Driftwood will reduce 6 roles [1]. The change becomes effective on 15 January 2027 [1][4].",
+     "cited_docs": [
+      "leadership/reorg-plan-operation-driftwood.md"
+     ],
+     "retrieved_docs": [
+      "leadership/reorg-plan-operation-driftwood.md",
+      "leadership/reorg-plan-operation-driftwood.md",
+      "leadership/reorg-plan-operation-driftwood.md",
+      "leadership/reorg-plan-operation-driftwood.md",
+      "leadership/reorg-plan-operation-driftwood.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2459,
+      "total": 2479
+     },
+     "wall_ms": 2479,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer states 6 roles and an effective date of 15 January 2027, matching the gold answer, and both facts are supported by passages [1] and [4].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q45",
+     "user": "hana.sato@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "leadership/leadership-offsite-notes-2026.md"
+     ],
+     "outcome": "answered",
+     "answer": "The leadership offsite decided to raise the Growth tier price to $85 per seat per month for new customers, effective from March 2027 [1].",
+     "cited_docs": [
+      "leadership/leadership-offsite-notes-2026.md"
+     ],
+     "retrieved_docs": [
+      "leadership/leadership-offsite-notes-2026.md",
+      "leadership/leadership-offsite-notes-2026.md",
+      "leadership/leadership-offsite-notes-2026.md",
+      "leadership/leadership-offsite-notes-2026.md",
+      "finance/budget-2027-draft.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 4,
+      "generate": 2878,
+      "total": 2893
+     },
+     "wall_ms": 2893,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives $85 per seat per month for new customers from March 2027, which matches the gold answer and is fully supported by passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q46",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your hourly rate is $95 per hour [1].",
+     "cited_docs": [
+      "shared/bob-tanner-statement-of-work.md"
+     ],
+     "retrieved_docs": [
+      "shared/bob-tanner-statement-of-work.md",
+      "contractors/contractor-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "engineering/api-design-guidelines.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 5,
+      "generate": 2559,
+      "total": 2574
+     },
+     "wall_ms": 2574,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $95 per hour rate, which passage [1] supports, and the 30-hour weekly cap it omits is supplementary to a question that asked only for the rate.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q47",
+     "user": "alice.chen@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/alice-chen-relocation-letter.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your relocation allowance is €12,400 [1]. This amount is paid in two instalments: half with your final US payroll in January 2027 and half with your first Portuguese payroll in February 2027 [1].",
+     "cited_docs": [
+      "shared/alice-chen-relocation-letter.md"
+     ],
+     "retrieved_docs": [
+      "shared/alice-chen-relocation-letter.md",
+      "shared/alice-chen-relocation-letter.md",
+      "finance/q3-2026-financial-results.md",
+      "all-hands/expense-policy.md",
+      "sales/sales-compensation-plan-2026.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 4,
+      "retrieve": 11,
+      "generate": 2915,
+      "total": 2935
+     },
+     "wall_ms": 2935,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the €12,400 amount and the two-instalment schedule, and both match passage [1] exactly.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q48",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "shared/frank-moreau-offer-letter.md"
+     ],
+     "outcome": "answered",
+     "answer": "Your offer letter states a base salary of $84,000 per year, paid semi-monthly [1].",
+     "cited_docs": [
+      "shared/frank-moreau-offer-letter.md"
+     ],
+     "retrieved_docs": [
+      "shared/frank-moreau-offer-letter.md",
+      "sales/sales-compensation-plan-2026.md",
+      "all-hands/compensation-philosophy.md",
+      "sales/sales-compensation-plan-2026.md",
+      "legal/contract-templates-guide.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2336,
+      "total": 2354
+     },
+     "wall_ms": 2354,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives the $84,000 base salary, which is the key fact asked for (the OTE in the gold is supplementary), and passage [1] supports both the amount and the semi-monthly payment.",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q49",
+     "user": "ian.brooks@fernhill.test",
+     "answerable": true,
+     "gold_docs": [
+      "it/it-admin-runbook.md"
+     ],
+     "outcome": "answered",
+     "answer": "Access must be removed within 4 hours of termination [1]. For involuntary terminations, access should be cut immediately during the termination meeting [1].",
+     "cited_docs": [
+      "it/it-admin-runbook.md"
+     ],
+     "retrieved_docs": [
+      "it/it-admin-runbook.md",
+      "it/it-admin-runbook.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/parental-leave-policy.md"
+     ],
+     "expect_met": true,
+     "hit_at_k": true,
+     "reciprocal_rank": 1.0,
+     "timings_ms": {
+      "embed": 4,
+      "retrieve": 7,
+      "generate": 2871,
+      "total": 2887
+     },
+     "wall_ms": 2887,
+     "fallback": null,
+     "served_model": "qwen3.7-plus",
+     "judge": {
+      "correct": true,
+      "faithful": true,
+      "reason": "The answer gives both key facts, the 4-hour window and immediate removal for involuntary terminations, and both come directly from passage [1].",
+      "judge_model": "claude-opus-5-5"
+     }
+    },
+    {
+     "id": "q50",
+     "user": "dan.kim@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/code-of-conduct.md",
+      "all-hands/office-guide.md",
+      "all-hands/remote-work-policy.md",
+      "all-hands/office-guide.md",
+      "all-hands/employee-handbook.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 2400,
+      "total": 2420
+     },
+     "wall_ms": 2420,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q51",
+     "user": "frank.moreau@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/remote-work-policy.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/code-of-conduct.md",
+      "all-hands/office-guide.md",
+      "all-hands/office-guide.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 7,
+      "generate": 2001,
+      "total": 2017
+     },
+     "wall_ms": 2017,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q52",
+     "user": "alice.chen@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/ceo-priorities-2027.md",
+      "finance/audit-prep-2026.md",
+      "all-hands/ceo-priorities-2027.md",
+      "finance/audit-prep-2026.md",
+      "it/saas-inventory.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 8,
+      "generate": 2110,
+      "total": 2126
+     },
+     "wall_ms": 2126,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q53",
+     "user": "bob.tanner@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "contractors/contractor-onboarding.md",
+      "engineering/engineering-onboarding.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "shared/bob-tanner-statement-of-work.md",
+      "all-hands/it-security-basics.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 7,
+      "retrieve": 11,
+      "generate": 2098,
+      "total": 2121
+     },
+     "wall_ms": 2121,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    },
+    {
+     "id": "q54",
+     "user": "ian.brooks@fernhill.test",
+     "answerable": false,
+     "gold_docs": [],
+     "outcome": "no_answer",
+     "answer": "I couldn't find that in documents available to you.",
+     "cited_docs": [],
+     "retrieved_docs": [
+      "all-hands/employee-handbook.md",
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/employee-handbook.md",
+      "all-hands/holiday-calendar-2026.md",
+      "all-hands/benefits-overview.md"
+     ],
+     "expect_met": null,
+     "hit_at_k": null,
+     "reciprocal_rank": null,
+     "timings_ms": {
+      "embed": 5,
+      "retrieve": 9,
+      "generate": 2183,
+      "total": 2204
+     },
+     "wall_ms": 2204,
+     "fallback": null,
+     "served_model": "qwen3.7-plus"
+    }
+   ]
+  }
+ },
+ "judge_original": null
+}

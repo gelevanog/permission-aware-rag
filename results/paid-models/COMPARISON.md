@@ -15,7 +15,8 @@ min_score 0.5, recall@5 of the gold document 1.0 for every run.
 | Baseline re-judged | same stored answers, nothing re-generated | `claude-opus-5-5` | 54 | `quality-baseline-rejudged-opus.json` |
 | Haiku | `claude-haiku-5-5` | `claude-opus-5-5` | 54 (full set) | `quality-haiku.json` |
 | Opus, hard subset | `claude-opus-5-5` | `claude-opus-5-5` | 20: the 15 answerable questions that any baseline model or Haiku got wrong, refused or answered unfaithfully, plus the 5 unanswerable ones | `quality-opus-subset.json` |
-| Qwen smoke | `qwen3.7-plus` | `claude-opus-5-5` | 4 requested, 3 answered (q11, q21, q46); q53 was refused by the 3,000-token Qwen budget | `quality-qwen-smoke.json` |
+| Qwen | `qwen3.7-plus` | `claude-opus-5-5` | 54 (full set) | `quality-qwen.json` |
+| Qwen smoke (superseded) | `qwen3.7-plus`, max_tokens 150 | `claude-opus-5-5` | 4 requested, 3 answered; q53 was refused by the original 3,000-token Qwen budget, which was raised afterwards | `quality-qwen-smoke.json` |
 | Leak test | `claude-haiku-5-5` for Clearance and the unfiltered baseline | n/a (canary string match) | 30 adversarial questions x 11 users = 330 pairs | `leak-haiku.json` |
 
 Opus is the judge for every row in the comparison, so all generators are graded by one judge.
@@ -24,31 +25,31 @@ The original free judge (dots-3) is shown for reference only. Every request is i
 
 ## Full question set (49 answerable + 5 unanswerable)
 
-| Metric | Free: local qwen3.5:4b | Free: nemotron-3-super :free | claude-haiku-5-5 |
-|---|---|---|---|
-| Correct, original free judge (dots-3) | 42/49 (85.7%) | 37/49 (75.5%) | not run |
-| **Correct, Opus judge** (refusals count as wrong) | 43/49 (87.8%) | 44/49 (89.8%) | **47/49 (95.9%)** |
-| **Faithful to the passages, Opus judge** | 40/48 (83.3%) | 48/48 (100%) | **48/48 (100%)** |
-| Faithful, original free judge | 46/48 | 48/48 | not run |
-| Key facts present (string check, no judge) | 47/49 | 47/49 | 47/49 |
-| False refusals (answerable, said "not available") | 1 (q11) | 1 (q11) | 1 (q11) |
-| Unanswerable questions declined | 5/5 | 5/5 | 5/5 |
-| **Answers with at least one citation** | 48/48 | 47/48 | **48/48** |
-| **Answers citing a gold document** | 48/48 | 47/48 | **48/48** |
-| Generation latency p50 / p95 | 8.7 s / 12.0 s (CPU) | 3.1 s / 12.1 s | 1.8 s / 2.4 s |
-| Errors after repair | 0 | 0 (2 re-asked on fallback) | 0 (2 re-asked after transient gateway 403s) |
+| Metric | Free: local qwen3.5:4b | Free: nemotron-3-super :free | claude-haiku-5-5 | qwen3.7-plus |
+|---|---|---|---|---|
+| Correct, original free judge (dots-3) | 42/49 (85.7%) | 37/49 (75.5%) | not run | not run |
+| **Correct, Opus judge** (refusals count as wrong) | 43/49 (87.8%) | 44/49 (89.8%) | **47/49 (95.9%)** | 46/49 (93.9%) |
+| **Faithful to the passages, Opus judge** | 40/48 (83.3%) | 48/48 (100%) | **48/48 (100%)** | **48/48 (100%)** |
+| Faithful, original free judge | 46/48 | 48/48 | not run | not run |
+| Key facts present (string check, no judge) | 47/49 | 47/49 | 47/49 | 47/49 |
+| False refusals (answerable, said "not available") | 1 (q11) | 1 (q11) | 1 (q11) | 1 (q11) |
+| Unanswerable questions declined | 5/5 | 5/5 | 5/5 | 5/5 |
+| **Answers with at least one citation** | 48/48 | 47/48 | **48/48** | **48/48** |
+| **Answers citing a gold document** | 48/48 | 47/48 | **48/48** | **48/48** |
+| Generation latency p50 / p95 | 8.7 s / 12.0 s (CPU) | 3.1 s / 12.1 s | 1.8 s / 2.4 s | 2.5 s / 3.1 s |
+| Errors after repair | 0 | 0 (2 re-asked on fallback) | 0 (2 re-asked after transient gateway 403s) | 0 |
 
 ## Hard subset (15 answerable + 5 unanswerable), all graded by the Opus judge
 
-| Metric | local qwen3.5:4b | nemotron :free | claude-haiku-5-5 | claude-opus-5-5 | qwen3.7-plus (3 of these only) |
+| Metric | local qwen3.5:4b | nemotron :free | claude-haiku-5-5 | claude-opus-5-5 | qwen3.7-plus |
 |---|---|---|---|---|---|
-| Correct | 9/15 | 10/15 | 13/15 | 13/15 | 2/3 |
-| Faithful | 11/14 | 14/14 | 14/14 | 14/14 | 2/2 |
-| Key facts (string check) | 13/15 | 13/15 | 13/15 | 13/15 | 2/3 |
-| Cited a gold document | 14/14 | 13/14 | 14/14 | 14/14 | 2/2 |
+| Correct | 9/15 | 10/15 | 13/15 | 13/15 | 12/15 |
+| Faithful | 11/14 | 14/14 | 14/14 | 14/14 | 14/14 |
+| Key facts (string check) | 13/15 | 13/15 | 13/15 | 13/15 | 13/15 |
+| Cited a gold document | 14/14 | 13/14 | 14/14 | 14/14 | 14/14 |
 | False refusals | 1 | 1 | 1 | 1 | 1 |
-| Unanswerable declined | 5/5 | 5/5 | 5/5 | 5/5 | n/a |
-| Generation latency p50 | 8.8 s | 2.8 s | 1.7 s | 2.8 s | 2.3 s (3 calls) |
+| Unanswerable declined | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 |
+| Generation latency p50 | 8.8 s | 2.8 s | 1.7 s | 2.8 s | 2.6 s |
 
 The subset was chosen *because* the baseline struggled on it, so the free models' numbers here are biased low by
 construction; read it as "what does a stronger model fix", not as an unbiased accuracy estimate.
@@ -70,21 +71,27 @@ is unchanged (98.6% vs 96.5%).
 
 | Model | Calls (ok / error) | Input / output tokens | Cost | Used for |
 |---|---|---|---|---|
-| claude-haiku-5-5 | 288 / 7 | 329k / 38k | ≈ $0.05 | 54 quality generations (+2 re-asks), 236 leak-test generations, 1 smoke |
-| claude-opus-5-5 | 179 / 10 | 223k / 28k | ≈ $1.45 | 97 baseline re-judgements ($0.86), 62 judgements of Haiku/Opus/Qwen answers ($0.44), 20 generations ($0.14) |
-| qwen3.7-plus | 3 / 1 | 1,992 / 37 | 2,029 of 3,000 tokens | 3 smoke generations; the 4th was refused (`budget_exhausted`) |
+| claude-haiku-5-5 | 288 / 55 | 329k / 38k | ≈ $0.05 | 54 quality generations (+2 re-asks), 236 leak-test generations, 1 smoke |
+| claude-opus-5-5 | 218 / 11 | 272k / 32k | ≈ $1.74 | 136 re-judgements of stored answers ($1.15: the 96 baseline answers, the 2 Qwen smoke answers and the 48 full-run Qwen answers; identical judge prompts are served from the disk cache and not billed again), 62 judgements of Haiku/Opus/Qwen-smoke answers ($0.44), 20 generations ($0.14) |
+| qwen3.7-plus | 57 / 1 | 45,454 / 1,534 | 46,988 of 150,000 tokens | 54 full-set generations and 3 earlier smoke generations; one smoke call was refused under the original 3,000-token cap |
 
 Ledger estimates use $0.10/$0.50 (Haiku) and $4/$20 (Opus) per 1M tokens. The proxy's budget endpoint reports
-**$1.65 of Anthropic spend** for this project in total, slightly above the ledger's $1.50 because it also counts a few
-manual probe calls made outside the harness while debugging. Errors: 13 transient `403 Request not allowed` responses from the gateway (each
-succeeded when re-run), 4 `temperature is deprecated` rejections of Opus judge calls during the Qwen run (where
-temperature was switched on for Qwen; they were re-judged without it), and 1 Qwen budget refusal. One early Haiku
-temperature rejection, from before the real runs, was removed from the ledger. Error calls cost nothing.
+**$1.97 of Anthropic spend** for this project in total, slightly above the ledger's $1.79 because it also counts a few
+manual probe calls made outside the harness while debugging. The proxy reports 46,988 Qwen tokens, which matches the
+ledger exactly. Errors cost nothing:
+- 14 transient `403 Request not allowed` responses from the gateway. Each succeeded when re-run.
+- 52 `temperature is deprecated` rejections of judge calls (4 Opus, 48 Haiku). These came from runs where
+  temperature was switched on for the Qwen generator, which also applied it to the judge. Those placeholder verdicts
+  were discarded, and every Qwen answer was then judged by Opus without temperature.
+- 1 Qwen budget refusal under the original cap.
+
+One early Haiku temperature rejection, from before the real runs, was removed from the ledger. No connection
+errors occurred: the proxy restart did not hit any call.
 
 ## Observations
 
-- **Haiku is the best value here.** Under the same Opus judge it got 47/49 correct, against 44/49 for the free
-  nemotron and 43/49 for the local 4B model. It was also 100% faithful, cited a gold document in every answer, and
+- **Haiku is the best value here.** Under the same Opus judge it got 47/49 correct, against 46/49 for Qwen 3.7
+  Plus, 44/49 for the free nemotron and 43/49 for the local 4B model. It was also 100% faithful, cited a gold document in every answer, and
   was the fastest generator (p50 1.8 s), all for about five cents for the full run. It fixed q33 and q38, which both
   free models got wrong because they left out the location or the "3-year prepaid, 500+ seats" condition on the
   floor price. The local model was also unfaithful on q38: it said the passages gave no floor price.
@@ -108,17 +115,22 @@ temperature rejection, from before the real runs, was removed from the ledger. E
   level and 0/330 at answer level. With the filter removed, Haiku repeated hidden canaries in 210/330 answers,
   about the same as the 4B local model (214/330). A stronger model refuses a little more often but does not stop
   repeating restricted content once it is in the context. The permission pre-filter and RLS are what keep it out.
-- **Qwen 3.7 Plus: a smoke test only (3 answers).** It answered q21 and q46 correctly, faithfully and with
-  citations, and refused q11 like every other model. That is too small a sample to rank it.
+- **Qwen 3.7 Plus is a close second on the full set.** It got 46/49 correct, was 48/48 faithful, cited a gold
+  document in every answer and declined all 5 unanswerable questions, with a p50 of 2.5 s. It wrote the tersest
+  answers: Qwen used 1,534 output tokens across 57 calls, and Haiku used 4,332 across 52 generations. Its one miss
+  beyond the shared q11/q14 failures is the omission type nemotron also makes: on q33 it named the role but not the
+  reporting line or the location. One question separates it from Haiku, which is within noise for 49 questions.
+  No leak test was run with Qwen: 236 generations of about 1,100 tokens each would not fit in the remaining Qwen
+  budget. Context-level filtering does not depend on the model anyway.
 
 ## Run notes and differences from the baseline
 
 - Sampling: Claude 5.5 models reject the `temperature` parameter, so the new `CLEARANCE_LLM_SEND_TEMPERATURE=false`
-  was used and they sampled at their default. The baseline used temperature 0. Qwen ran at temperature 0 with
-  `max_tokens` 150 instead of 700 to fit the token budget (its answers used 2 to 23 tokens).
+  was used and they sampled at their default. The baseline used temperature 0. The full Qwen run used temperature 0
+  and `max_tokens` 700, the same as the baseline. The earlier smoke run used `max_tokens` 150.
 - The judge prompt and the 4,000-token judge budget are unchanged. Opus judged the Opus-generated answers itself,
   and Haiku/Opus are the same model family, so a same-family bias cannot be ruled out. The judge-free key-fact
-  string check, at 47/49 for all three full-set generators, is the cross-check.
+  string check, at 47/49 for all four full-set generators, is the cross-check.
 - The `retrieval` block in `quality-haiku.json` says 47 questions because it was computed before the two errored
   rows were repaired. All 49 answerable rows are present and hit@5 is true for every one.
 - The `seconds` field in `leak-haiku.json` (36 s) is from the last of four runs. The earlier runs stopped on
@@ -131,5 +143,5 @@ temperature rejection, from before the real runs, was removed from the ledger. E
   - `clearance eval quality-repair --path results/paid-models/quality-haiku.json --provider gateway --judge-model claude-opus-5-5 --retry-model claude-haiku-5-5`
   - `clearance eval rejudge --path results/quality.json --output results/paid-models/quality-baseline-rejudged-opus.json --judge-provider gateway --judge-model claude-opus-5-5`
   - `clearance eval quality --skip-local --cloud-provider gateway --cloud-model claude-opus-5-5 --judge-provider gateway --judge-model claude-opus-5-5 --questions q01,q02,q05,q07,q10,q11,q14,q21,q32,q33,q35,q37,q38,q46,q47,q50,q51,q52,q53,q54 --output results/paid-models/quality-opus-subset.json`
-  - `clearance eval quality ... --cloud-model qwen3.7-plus --questions q11,q21,q46,q53` (temperature on, max_tokens 150), then `clearance eval rejudge` on that file with the Opus judge
+  - `CLEARANCE_LLM_SEND_TEMPERATURE=true clearance eval quality --skip-local --cloud-provider gateway --cloud-model qwen3.7-plus ... --output results/paid-models/quality-qwen.json` (temperature on for Qwen; the judge calls in this step failed on temperature, and those placeholder verdicts were dropped), then `clearance eval rejudge --path results/paid-models/quality-qwen.json --output results/paid-models/quality-qwen.json --judge-provider gateway --judge-model claude-opus-5-5`. The smoke file was produced the same way with `--questions q11,q21,q46,q53` and max_tokens 150.
   - `clearance eval leak --generate clearance,unfiltered --provider gateway --model claude-haiku-5-5 --output results/paid-models/leak-haiku.json`
