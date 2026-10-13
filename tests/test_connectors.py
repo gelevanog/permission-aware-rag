@@ -152,9 +152,12 @@ def _docx(text: str) -> bytes:
         f'<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r><w:t>Engineering</w:t></w:r></w:p>'
         f"<w:p><w:r><w:t>{text}</w:t></w:r></w:p></w:body></w:document>"
     )
+    # Fixed entry timestamp: writestr() with a bare name stamps the current time (2 s resolution), so two builds of
+    # the same document straddling a boundary differed in bytes and content hash, and an unchanged file read as edited.
+    entry = zipfile.ZipInfo("word/document.xml", date_time=(2026, 10, 2, 11, 0, 0))
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w") as archive:
-        archive.writestr("word/document.xml", xml)
+        archive.writestr(entry, xml)
     return buffer.getvalue()
 
 
@@ -228,6 +231,7 @@ def test_sharepoint_incremental_sync_applies_deletions_and_permission_changes(db
     router.revoked = True
     second = sync_sharepoint(db, writer, _sharepoint(router))
     assert second.count("acl_updated") == 1 and second.deleted == 1
+    assert sum(r.embedded for r in second.results) == 0  # a sharing change rewrites ACL rows, never re-embeds
     assert not any("9.4 million" in c.text for c in retriever.search(vector, hana, 5))
     assert writer.external_ids("sharepoint") == {"01BUDGET"}
 
